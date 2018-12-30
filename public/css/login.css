@@ -1,0 +1,25 @@
+main {
+	display: flex;
+	justify-content: space-around;
+}
+
+input[type!="button"]{
+	width: 100%;
+}
+
+form {
+	width: 173px;
+	margin-top: 200px;
+}
+
+section {
+	margin-bottom: 10px;
+}
+
+section:last-child {
+	margin-bottom: 0;
+}
+
+input[name="submit"] {
+	float: right;
+}

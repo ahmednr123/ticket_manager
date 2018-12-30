@@ -1,0 +1,77 @@
+a, a:visited {
+	text-decoration: none;
+	color: grey;
+}
+
+header {
+	display: flex;
+	justify-content: space-between;
+	padding:10px;
+}
+
+#logo {
+	font-size: 24px;
+}
+
+nav[id="account"] > a {
+	margin-left: 20px;
+}
+
+god {
+	display: flex;
+	margin-top: 30px;
+}
+
+nav[id="side"] {
+	width:200px;
+}
+
+main {
+	width: 500px;
+}
+
+.sec_name {
+	font-size: 24px;
+	font-weight: bold;
+	margin-bottom: 25px;
+}
+
+tickets {
+	display: flex;
+	flex-direction: column;
+}
+
+ticket > * {
+	margin-bottom: 5px
+}
+
+ticket > :last-child {
+	margin-bottom: 0px
+}
+
+ticket {
+	display: flex;
+	flex-direction: column;
+	padding: 10px;
+	border: 1px solid lightgrey;
+	border-radius:5px;
+	margin-bottom: 10px;
+}
+
+ticket:hover {
+	background: #eee;
+	cursor: pointer;
+}
+
+ticket > id {
+	color: grey;
+}
+ticket > id:before {
+	content: '#';
+}
+
+ticket > name {
+	color: darkred;
+	font-weight: bold;
+	font-size: 18px;
+}

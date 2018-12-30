@@ -1,0 +1,16 @@
+doctype html
+html
+head
+	title Welcome
+	link(rel="stylesheet" href="css/login.css")
+body
+	main
+		form(action="/login" method="get")
+			section
+				label(for="uname") Username
+				input(type="text" name="uname")
+			section
+				label(for="pass") Password
+				input(type="password" name="pass")
+			section
+				input(type="submit" name="submit" value="LogIn")
