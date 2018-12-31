@@ -1,8 +1,3 @@
-a, a:visited {
-	text-decoration: none;
-	color: grey;
-}
-
 header {
 	display: flex;
 	justify-content: space-between;
@@ -14,7 +9,9 @@ header {
 }
 
 nav[id="account"] > a {
+	text-decoration: none;
 	margin-left: 20px;
+	color: grey;
 }
 
 god {

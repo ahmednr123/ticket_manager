@@ -1,0 +1,28 @@
+doctype html
+html
+head
+	title Welcome
+	link(rel="stylesheet" href="/css/login.css")
+body
+	main
+		form(action="/signup" method="post")
+			section
+				label(for="fname") Full Name
+				input(type="text" name="fname")
+			section
+				label(for="uname") Username
+				input(type="text" name="uname")
+			section
+				label(for="email") Email
+				input(type="text" name="email")
+			section
+				label(for="pass") Password
+				input(type="password" name="pass")
+			section
+				label(for="type") Type
+				select(name="type")
+					option(selected) user
+					option superuser
+				//input(type="password" name="pass")
+			section
+				input(type="submit" name="signup" value="SignUp")

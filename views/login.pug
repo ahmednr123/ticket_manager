@@ -2,10 +2,10 @@ doctype html
 html
 head
 	title Welcome
-	link(rel="stylesheet" href="css/login.css")
+	link(rel="stylesheet" href="/css/login.css")
 body
 	main
-		form(action="/login" method="get")
+		form(action="/auth/login" method="post")
 			section
 				label(for="uname") Username
 				input(type="text" name="uname")
@@ -14,3 +14,5 @@ body
 				input(type="password" name="pass")
 			section
 				input(type="submit" name="submit" value="LogIn")
+			section
+				a(href="/auth/repass") Forgot password

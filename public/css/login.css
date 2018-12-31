@@ -3,12 +3,12 @@ main {
 	justify-content: space-around;
 }
 
-input[type!="button"]{
+input[type="text"], input[type="password"]{
 	width: 100%;
 }
 
 form {
-	width: 173px;
+	width: 200px;
 	margin-top: 200px;
 }
 
@@ -20,6 +20,10 @@ section:last-child {
 	margin-bottom: 0;
 }
 
-input[name="submit"] {
+input[type="button"], input[type="submit"] {
 	float: right;
+}
+
+#more {
+	display: none;
 }
