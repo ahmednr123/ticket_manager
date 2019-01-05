@@ -1,5 +1,9 @@
 const crypto = require('crypto')
 
+function genRandomKey (bytes) {
+	return crypto.randomBytes(bytes).toString('hex')
+}
+
 function genPassword (password) {
 	let salt = crypto.randomBytes(16).toString('hex')
 	let hash = salt + ':' + crypto.pbkdf2Sync(password, salt, 100, 64, 'sha256').toString('hex')

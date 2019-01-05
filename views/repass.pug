@@ -1,33 +1,19 @@
 html
 head
 	title Change Password
-	link(rel="stylesheet" href="css/login.css")
+	meta(charset="utf-8")
+	meta(name="viewport", content="width=device-width, initial-scale=1")
+	meta(name="viewport", content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no")
+	link(rel="stylesheet" href="/css/login.css")
+	style.
+		input[type='text'], input[type="password"]{
+			width:100%;
+		}
 body
 	main
 		form(action="/repass" method="post")
-			section#send_token
-				section
-					label(for="uname") Username
-					input(type="text" name="uname")
-				section
-					input(type="submit" name="sendtoken" value="Send Token")
-				section#token_btn
-					a(onclick="showToken()", href="#") I have a token
-			section#more
-				section
-					label(for="token") Token
-					input(type="text" name="token")
-				section
-					label(for="pass") Password
-					input(type="password" name="pass")
-				section
-					label(for="re_pass") Re-Type Password
-					input(type="password" name="re_pass")
-				section
-					input(type="submit" name="changepass" value="Change Password")
-
-	script.
-		function showToken () {
-			document.getElementById('more').style.display = 'block'
-			document.getElementById('send_token').style.display = 'none'
-		}
+			section
+				label(for="uname") Username
+				input(type="text" name="uname")
+			section
+				input(type="submit" name="sendtoken" value="Send Token")
