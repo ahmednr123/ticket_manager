@@ -2,17 +2,15 @@ include include/mixins.pug
 
 doctype html
 html
-head
-	title Welcome
-	meta(charset="utf-8")
-	meta(name="viewport", content="width=device-width, initial-scale=1")
-	meta(name="viewport", content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no")
-	link(rel="stylesheet" href="css/index.css")
-body
-	include include/header.pug
-	god
-		nav#side
-		main
+	head
+		title Welcome
+		meta(charset="utf-8")
+		meta(name="viewport", content="width=device-width, initial-scale=1")
+		meta(name="viewport", content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no")
+		link(rel="stylesheet" href="css/index.css")
+	body
+		include include/header.pug
+		god
 			section#tickets
 				div.sec_name Tickets
 				tickets

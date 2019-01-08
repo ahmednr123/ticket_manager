@@ -1,29 +1,70 @@
+@font-face{
+	font-family: 'open-sans';
+	src: url('../fonts/OpenSans/OpenSans-Regular.ttf');
+	font-weight: 400;
+}
+
+@font-face{
+	font-family: 'open-sans';
+	src: url('../fonts/OpenSans/OpenSans-Bold.ttf');
+	font-weight: bold;
+}
+
+body{
+	position: fixed;
+	display: flex;
+	margin:0;
+	top: 0;
+	right: 0;
+	left: 0;
+	bottom: 0;
+}
+
+*{
+	font-family: 'open-sans';
+}
+
 header {
 	display: flex;
+	width: 200px;
+	height: calc(100% - 100px);
+	flex-direction: column;
 	justify-content: space-between;
-	padding:10px;
+	padding: 50px 10px;
+	border-right: 1px solid lightgrey;
 }
 
 #logo {
 	font-size: 24px;
+	text-align: center;
+	margin-bottom: 20px;
 }
 
-nav[id="account"] > a {
+nav {
+	display: flex;
+	flex-direction: column;
+	float:left;
+}
+
+nav[class="bottom"] {
+	margin-top: 20px;
+}
+
+nav > a {
 	text-decoration: none;
-	margin-left: 20px;
+	text-align: center;
+	margin-top: 10px;
 	color: grey;
 }
 
 god {
+	width: calc(100% - 260px);
 	display: flex;
-	margin-top: 30px;
+	padding: 20px;
+	float: left;
 }
 
-nav[id="side"] {
-	width:200px;
-}
-
-main {
+#tickets {
 	width: 500px;
 }
 

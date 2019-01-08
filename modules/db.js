@@ -35,13 +35,23 @@ module.exports = {
 		})
 	},
 
-	checkToken: async (token, username) => {
-		let records = await query(`SELECT * FROM tokens WHERE token="${token}" AND username="${username}"`)
+	savePassword: (username, password) => {
+		password = crypt.genPassword(password)
+
+		db.query(`UPDATE users SET password=${password} WHERE username=${username}`, (err) => {
+			if(err) console.log(err)
+		})
+	},
+
+	checkToken: async (token, username, label) => {
+		let records = await query(`SELECT * FROM tokens WHERE token="${token}" AND username="${username}" AND label="${label}"`)
 		return (records.length > 0) ? true : false 
 	},
 
-	getTokenType: (token, username) => {
-
+	deleteToken: (token, username, lable) => {
+		db.query(`DELETE FROM tokens WHERE token="${token}" AND username="${username}" AND label="${label}"`, (err) => {
+			if(err) console.log(err)
+		})
 	},
 
 	createToken: (username, label) => {

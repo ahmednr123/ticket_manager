@@ -21,6 +21,10 @@ function htmlEntities(str) {
     return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
+router.get('/', (req, res) => {
+	res.redirect('/login')
+})
+
 router.get('/signup', (req, res) => {
 	res.render('temp_signup')
 })
@@ -39,7 +43,10 @@ router.post('/signup', (req, res) => {
 })
 
 router.get('/login', (req, res) => {
-	res.render('login')
+	if(!req.session.username)
+		res.render('login')
+	else
+		res.redirect('/')
 })
 
 router.post('/login', async (req, res) => {
@@ -80,15 +87,11 @@ router.post('/repass', async (req, res) => {
 			else
 				console.log('Email sent: ' + info.response)
 		})
+		
 		// error sending mechanism
 		//res.render('repass', {error:true, msg: ''})
 	}
 
-	if(req.body.changepass){
-		
-		res.render('repass', {error:true, msg: ''})
-	}
-	console.log(req.body)
 	res.redirect('/repass')
 })
 
@@ -96,7 +99,7 @@ router.get('/setPassword', async (req, res) => {
 	let uname = htmlEntities(req.body.uname)
 	let token = htmlEntities(req.body.token)
 
-	let isToken = await db.checkToken(token, uname)
+	let isToken = await db.checkToken(token, uname, constants.TL_PASSWORD_RESET)
 
 	if(isToken)
 		res.render('set_password')
@@ -104,13 +107,18 @@ router.get('/setPassword', async (req, res) => {
 		res.end('404 - Not Found')
 })
 
-router.post('/setPassword', (req, res) => {
+router.post('/setPassword', async (req, res) => {
 	let uname = htmlEntities(req.body.uname)
 	let token = htmlEntities(req.body.token)
 	let password = htmlEntities(req.body.pass)
 
+	let isToken = await db.checkToken(token, uname, constants.TL_PASSWORD_RESET)
 
-	
+	if (isToken) {
+		db.deleteToken(token, uname, constants.TL_PASSWORD_RESET)
+		db.setPassword(uname, password)
+	}
+
 	res.redirect('/auth/login')
 })
 
