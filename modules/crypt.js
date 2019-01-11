@@ -20,4 +20,4 @@ function checkPassword (password, chash) {
 	return new_hash === hash
 }
 
-module.exports = { genPassword, checkPassword }
+module.exports = { genPassword, checkPassword, genRandomKey }

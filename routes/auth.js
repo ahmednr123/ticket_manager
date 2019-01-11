@@ -70,20 +70,20 @@ router.get('/repass', (req, res) => {
 
 router.post('/repass', async (req, res) => {
 	if(req.body.sendtoken){
-		let uname = htmlEntities(req.body.uname)
+		let username = htmlEntities(req.body.uname)
 		let token = await db.createToken(username, constants.TL_PASSWORD_RESET)
-		let email = await db.getUserEmail(uername)
+		let email = await db.getEmail(username)
 
 		const mailOptions = {
 			from: 'Admin',
 			to: email,
 			subject: 'Set your password',
-			text: `Follow the link http://localhost/auth/setPassword?token=${token}&username=${username}`
+			text: `Follow the link http://localhost:8080/auth/setPassword?token=${token}&username=${username}`
 		}
 
 		transporter.sendMail(mailOptions, (error, info) => {
 			if (error)
-				console.log(error)
+				console.log("MAIL ERROR: " + error)
 			else
 				console.log('Email sent: ' + info.response)
 		})
@@ -92,17 +92,17 @@ router.post('/repass', async (req, res) => {
 		//res.render('repass', {error:true, msg: ''})
 	}
 
-	res.redirect('/repass')
+	res.redirect('/auth/repass')
 })
 
 router.get('/setPassword', async (req, res) => {
-	let uname = htmlEntities(req.body.uname)
-	let token = htmlEntities(req.body.token)
+	let username = htmlEntities(req.query.username)
+	let token = htmlEntities(req.query.token)
 
-	let isToken = await db.checkToken(token, uname, constants.TL_PASSWORD_RESET)
+	let isToken = await db.checkToken(token, username, constants.TL_PASSWORD_RESET)
 
 	if(isToken)
-		res.render('set_password')
+		res.render('set_password', {username, token})
 	else
 		res.end('404 - Not Found')
 })
@@ -115,8 +115,8 @@ router.post('/setPassword', async (req, res) => {
 	let isToken = await db.checkToken(token, uname, constants.TL_PASSWORD_RESET)
 
 	if (isToken) {
+		db.savePassword(uname, password)
 		db.deleteToken(token, uname, constants.TL_PASSWORD_RESET)
-		db.setPassword(uname, password)
 	}
 
 	res.redirect('/auth/login')

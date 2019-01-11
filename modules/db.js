@@ -38,17 +38,19 @@ module.exports = {
 	savePassword: (username, password) => {
 		password = crypt.genPassword(password)
 
-		db.query(`UPDATE users SET password=${password} WHERE username=${username}`, (err) => {
+		db.query(`UPDATE users SET password="${password}" WHERE username="${username}"`, (err) => {
 			if(err) console.log(err)
 		})
 	},
 
 	checkToken: async (token, username, label) => {
+		console.log(`SELECT * FROM tokens WHERE token="${token}" AND username="${username}" AND label="${label}"`)
 		let records = await query(`SELECT * FROM tokens WHERE token="${token}" AND username="${username}" AND label="${label}"`)
+		console.log(records)
 		return (records.length > 0) ? true : false 
 	},
 
-	deleteToken: (token, username, lable) => {
+	deleteToken: (token, username, label) => {
 		db.query(`DELETE FROM tokens WHERE token="${token}" AND username="${username}" AND label="${label}"`, (err) => {
 			if(err) console.log(err)
 		})
@@ -63,7 +65,7 @@ module.exports = {
 
 		db.query('SELECT DATE_ADD(NOW(), INTERVAL 3 HOUR)', (err, result, fields) => {
 			if(err) console.log(err)
-			theguy.setTokenTime(result[0][fields[0].name], token)
+			theguy.setTokenTime(db, result[0][fields[0].name], token)
 		})
 
 		return token

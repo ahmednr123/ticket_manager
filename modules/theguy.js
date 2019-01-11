@@ -3,15 +3,25 @@ const cron = require('node-cron')
 
 module.exports = {
 	setTokenTime: (db, dt, token) => {
+		console.log('DATE: ' + dt)
+		console.log('DATE TYPE: ' + typeof(dt))
+
 		let day = dt.getDate()
 		let month = dt.getMonth() + 1
 
 		let hour = dt.getHours()
-		let minutes = dt.getMinutes()
+		let minute = dt.getMinutes()
 
-		cron.schedule(`${minutes} ${hours} ${day} ${month} ?`, () => {
+		let task = cron.schedule(`${minute} ${hour} ${day} ${month} *`, () => {
+			console.log("CRON HAPPENED!")
 			db.query(`DELETE FROM tokens WHERE token=${token}`, (err) => {
-				if(err) console.log('error')
+				if(err){
+					console.log('Error - theGuy:sendTokenTime')
+					console.log('============================')
+					console.log(err)
+				} else {
+					task.destroy()
+				}
 			})
 		})
 	}

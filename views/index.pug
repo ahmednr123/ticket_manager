@@ -11,6 +11,10 @@ html
 	body
 		include include/header.pug
 		god
+			section#projects
+				div.sec_name Projects
+				projects
+					+make_project()
 			section#tickets
 				div.sec_name Tickets
 				tickets

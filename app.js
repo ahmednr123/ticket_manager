@@ -20,9 +20,9 @@ app.use('/su', suRoutes)
 app.set('view engine', 'pug')
 
 app.get('/', (req, res) => {
-	//if(!req.session.username)
-	//	res.redirect('/auth/login')
-	//else
+	if(!req.session.username)
+		res.redirect('/auth/login')
+	else
 		res.render('index')
 })
 
