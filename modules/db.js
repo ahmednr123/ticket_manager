@@ -43,11 +43,21 @@ module.exports = {
 		})
 	},
 
+	checkUser: async (username) => {
+		let records = await query(`SELECT * FROM users WHERE username="${username}"`)
+		return (records.length > 0) ? true : false
+	},
+
 	checkToken: async (token, username, label) => {
-		console.log(`SELECT * FROM tokens WHERE token="${token}" AND username="${username}" AND label="${label}"`)
-		let records = await query(`SELECT * FROM tokens WHERE token="${token}" AND username="${username}" AND label="${label}"`)
-		console.log(records)
-		return (records.length > 0) ? true : false 
+		let records = null
+		
+		// Lazy Coding : to ignore token
+		if(!label)
+			records = await query(`SELECT * FROM tokens WHERE username="${token}" AND label="${username}"`)
+		else
+			records = await query(`SELECT * FROM tokens WHERE token="${token}" AND username="${username}" AND label="${label}"`)
+		
+		return records.length//(records.length > 0) ? true : false
 	},
 
 	deleteToken: (token, username, label) => {

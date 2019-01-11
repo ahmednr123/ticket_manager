@@ -1,0 +1,32 @@
+.flash_card {
+	padding: 4px;
+	border: 1px solid grey;
+	border-radius: 4px;
+	background: #ddd;
+	margin-bottom: 10px;
+	font-size: 14px;
+}
+
+.fc_err {
+	background: #ffe0e0;
+	color: #e01111;
+	border-color: #e01111;
+}
+
+.fc_warn {
+	background: #fff4cc;
+	color: #6d5c07;
+	border-color: #b2960e;
+}
+
+.fc_info {
+	background: #d8f4ff;
+	color: #094f6b;
+	border-color: #1387b5;
+}
+
+.fc_ok {
+	background: #ecffc6;
+	color: #426005;
+	border-color: #6a9b09;
+}

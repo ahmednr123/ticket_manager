@@ -4,6 +4,7 @@ head
 	meta(charset="utf-8")
 	meta(name="viewport", content="width=device-width, initial-scale=1")
 	meta(name="viewport", content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no")
+	link(rel="stylesheet" href="/css/flash.css")
 	link(rel="stylesheet" href="/css/login.css")
 	style.
 		input[type='text'], input[type="password"]{
@@ -12,6 +13,7 @@ head
 body
 	main
 		form(action="/auth/repass" method="post")
+			include include/flash.pug
 			section
 				label(for="uname") Username
 				input(type="text" name="uname")

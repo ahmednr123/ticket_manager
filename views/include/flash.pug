@@ -1,0 +1,10 @@
+if flash
+	each card in flash
+		if card.type == 'err'
+			.flash_card.fc_err !{card.msg}
+		else if card.type == 'warn'
+			.flash_card.fc_warn !{card.msg}
+		else if card.type == 'ok'
+			.flash_card.fc_ok !{card.msg}
+		else
+			.flash_card.fc_info !{card.msg}

@@ -13,6 +13,7 @@ const express = require('express')
 const router = express.Router()
 
 const db = require('../modules/db.js')
+const flash = require('../modules/flash.js')
 
 const constants = require('../modules/constants.js')
 
@@ -43,6 +44,7 @@ router.post('/signup', (req, res) => {
 })
 
 router.get('/login', (req, res) => {
+
 	if(!req.session.username)
 		res.render('login')
 	else
@@ -60,8 +62,12 @@ router.post('/login', async (req, res) => {
 	if(auth == true){
 		req.session.username = username
 		res.end('You are logged in!');
-	} else 
-		res.redirect('/auth/login')
+	} else {
+		let cards = new flash()
+		cards.add('err', 'Wrong Credentials')
+
+		res.render('login', {flash: cards.render()})
+	}
 })
 
 router.get('/repass', (req, res) => {
@@ -69,8 +75,27 @@ router.get('/repass', (req, res) => {
 })
 
 router.post('/repass', async (req, res) => {
+	let cards = new flash()
+
 	if(req.body.sendtoken){
 		let username = htmlEntities(req.body.uname)
+
+		let isUser = await db.checkUser(username)
+
+		if(!isUser) {
+			cards.add('err', `User doesn't exist`)
+			res.render('repass', {flash: cards.render()})
+			return
+		}
+
+		let tokens = await db.checkToken(username, constants.TL_PASSWORD_RESET)
+
+		if(tokens > 0) {
+			cards.add('info', `Email Already sent!`)
+			res.render('repass', {flash: cards.render()})
+			return
+		} 
+
 		let token = await db.createToken(username, constants.TL_PASSWORD_RESET)
 		let email = await db.getEmail(username)
 
@@ -82,17 +107,20 @@ router.post('/repass', async (req, res) => {
 		}
 
 		transporter.sendMail(mailOptions, (error, info) => {
-			if (error)
+			if (error){
 				console.log("MAIL ERROR: " + error)
-			else
+				cards.add('err', `Server Error Occured`)
+				res.render('repass', {flash: cards.render()})
+			} else {
 				console.log('Email sent: ' + info.response)
+				cards.add('ok', `Email Sent`)
+				res.render('repass', {flash: cards.render()})
+			}
+			return
 		})
-		
-		// error sending mechanism
-		//res.render('repass', {error:true, msg: ''})
-	}
 
-	res.redirect('/auth/repass')
+	} else 
+		res.render('repass', {flash: cards.render()})
 })
 
 router.get('/setPassword', async (req, res) => {
@@ -108,34 +136,26 @@ router.get('/setPassword', async (req, res) => {
 })
 
 router.post('/setPassword', async (req, res) => {
-	let uname = htmlEntities(req.body.uname)
+	let username = htmlEntities(req.body.uname)
 	let token = htmlEntities(req.body.token)
 	let password = htmlEntities(req.body.pass)
 
-	let isToken = await db.checkToken(token, uname, constants.TL_PASSWORD_RESET)
+	let cards = new flash()
+
+	if(password.length < 8) {
+		cards.add('err', 'Password must contain atleast <b>8 characters</b>')
+		res.render('set_password', {flash:cards.render(), username, token})
+		return
+	}
+
+	let isToken = await db.checkToken(token, username, constants.TL_PASSWORD_RESET)
 
 	if (isToken) {
-		db.savePassword(uname, password)
-		db.deleteToken(token, uname, constants.TL_PASSWORD_RESET)
+		db.savePassword(username, password)
+		db.deleteToken(token, username, constants.TL_PASSWORD_RESET)
 	}
 
 	res.redirect('/auth/login')
 })
 
 module.exports = router
-
-/*
-const mailOptions = {
-  from: 'The ',
-  to: 'ahmednr123@gmail.com',
-  subject: 'Sending Email using Node.js',
-  text: 'That was easy!'
-}
-
-transporter.sendMail(mailOptions, (error, info) => {
-  if (error)
-    console.log(error)
-  else
-    console.log('Email sent: ' + info.response)
-})
-*/
