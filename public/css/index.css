@@ -40,6 +40,21 @@ header {
 	margin-bottom: 20px;
 }
 
+#chatbox {
+	position: absolute;
+	bottom: 0;
+	width: calc(100% - 16px);
+}
+
+#chatbox > textarea{
+	resize: none;
+	width: calc(100% - 16px);
+	padding: 8px;
+	font-size: 15px;
+	border-radius:6px;
+	outline: none;
+}
+
 nav {
 	display: flex;
 	flex-direction: column;
@@ -62,6 +77,22 @@ god {
 	display: flex;
 	padding: 20px;
 	float: left;
+}
+
+god > section {
+	width: 33%;
+	padding: 0px 10px;
+	/*border-left: 1px solid lightgrey;*/
+	position: relative;
+}
+
+god > section:first-child {
+	padding-left: 0px;
+	border-left: 0px;
+}
+
+god > section:last-child {
+	padding-right: 0px;
 }
 
 #tickets {

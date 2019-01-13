@@ -3,6 +3,7 @@ const app = express()
 
 const authRoutes = require('./routes/auth.js')
 const suRoutes = require('./routes/superuser.js')
+const projRoutes = require('./routes/project.js')
 
 const bodyParser = require('body-parser')
 const session = require('express-session');
@@ -16,13 +17,14 @@ app.use(bodyParser.json())
 
 app.use('/auth', authRoutes)
 app.use('/su', suRoutes)
+app.use('/project', projRoutes)
 
 app.set('view engine', 'pug')
 
 app.get('/', (req, res) => {
-	if(!req.session.username)
-		res.redirect('/auth/login')
-	else
+	//if(!req.session.username)
+	//	res.redirect('/auth/login')
+	//else
 		res.render('index')
 })
 

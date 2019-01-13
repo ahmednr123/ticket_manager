@@ -27,7 +27,7 @@ router.get('/', (req, res) => {
 })
 
 router.get('/signup', (req, res) => {
-	res.render('temp_signup')
+	res.render('auth/temp_signup')
 })
 
 router.post('/signup', (req, res) => {
@@ -46,7 +46,7 @@ router.post('/signup', (req, res) => {
 router.get('/login', (req, res) => {
 
 	if(!req.session.username)
-		res.render('login')
+		res.render('/auth/login.pug')
 	else
 		res.redirect('/')
 })
@@ -66,12 +66,12 @@ router.post('/login', async (req, res) => {
 		let cards = new flash()
 		cards.add('err', 'Wrong Credentials')
 
-		res.render('login', {flash: cards.render()})
+		res.render('auth/login', {flash: cards.render()})
 	}
 })
 
 router.get('/repass', (req, res) => {
-	res.render('repass')
+	res.render('auth/repass')
 })
 
 router.post('/repass', async (req, res) => {
@@ -84,7 +84,7 @@ router.post('/repass', async (req, res) => {
 
 		if(!isUser) {
 			cards.add('err', `User doesn't exist`)
-			res.render('repass', {flash: cards.render()})
+			res.render('auth/repass', {flash: cards.render()})
 			return
 		}
 
@@ -92,7 +92,7 @@ router.post('/repass', async (req, res) => {
 
 		if(tokens > 0) {
 			cards.add('info', `Email Already sent!`)
-			res.render('repass', {flash: cards.render()})
+			res.render('auth/repass', {flash: cards.render()})
 			return
 		} 
 
@@ -110,17 +110,17 @@ router.post('/repass', async (req, res) => {
 			if (error){
 				console.log("MAIL ERROR: " + error)
 				cards.add('err', `Server Error Occured`)
-				res.render('repass', {flash: cards.render()})
+				res.render('auth/repass', {flash: cards.render()})
 			} else {
 				console.log('Email sent: ' + info.response)
 				cards.add('ok', `Email Sent`)
-				res.render('repass', {flash: cards.render()})
+				res.render('auth/repass', {flash: cards.render()})
 			}
 			return
 		})
 
 	} else 
-		res.render('repass', {flash: cards.render()})
+		res.render('auth/repass', {flash: cards.render()})
 })
 
 router.get('/setPassword', async (req, res) => {
@@ -130,7 +130,7 @@ router.get('/setPassword', async (req, res) => {
 	let isToken = await db.checkToken(token, username, constants.TL_PASSWORD_RESET)
 
 	if(isToken)
-		res.render('set_password', {username, token})
+		res.render('auth/set_password', {username, token})
 	else
 		res.end('404 - Not Found')
 })
@@ -139,12 +139,21 @@ router.post('/setPassword', async (req, res) => {
 	let username = htmlEntities(req.body.uname)
 	let token = htmlEntities(req.body.token)
 	let password = htmlEntities(req.body.pass)
+	let re_password = htmlEntities(req.body.re_pass)
 
 	let cards = new flash()
 
-	if(password.length < 8) {
+	let isRePasswordSame = password != re_password
+	let isPasswordEnough = password.length < 8
+
+	if(isRePasswordSame)
+		cards.add('err', `Passwords don't match`)
+
+	if(isPasswordEnough)
 		cards.add('err', 'Password must contain atleast <b>8 characters</b>')
-		res.render('set_password', {flash:cards.render(), username, token})
+
+	if(isPasswordEnough || isRePasswordSame) {
+		res.render('auth/set_password', {flash:cards.render(), username, token})
 		return
 	}
 
