@@ -1,3 +1,6 @@
+- var action = "/auth/login?";
+- if(redirect) { action += "redirect="+encodeURI(redirect) };
+
 doctype html
 html
 head
@@ -9,8 +12,8 @@ head
 	link(rel="stylesheet" href="/css/login.css")
 body
 	main
-		form(action="/auth/login" method="post")
-			include /views/include/flash.pug
+		form(action=action method="post")
+			include /include/flash.pug
 			section
 				label(for="uname") Username
 				input(type="text" name="uname")

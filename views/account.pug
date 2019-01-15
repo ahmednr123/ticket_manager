@@ -1,0 +1,30 @@
+include include/mixins.pug
+
+doctype html
+html
+	head
+		title Welcome
+		meta(charset="utf-8")
+		meta(name="viewport", content="width=device-width, initial-scale=1")
+		meta(name="viewport", content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no")
+		link(rel="stylesheet" href="css/index.css")
+		link(rel="stylesheet" href="css/account.css")
+		script(src="js/vanilla.js")
+	body
+		include include/header.pug
+		god
+			section#account
+				form(action="/account/update" method="post")
+					section
+						h2 #{username}
+					section
+						label Full name
+						input(type="text" name="full_name" value=full_name)
+					section
+						label Email
+						input(type="text" name="email" value=email)
+					section
+						label Phone
+						input(type="text" name="phone" value=phone)
+					section
+						input(type="submit" value="Update")

@@ -48,6 +48,18 @@ module.exports = {
 		return (records.length > 0) ? true : false
 	},
 
+	getUserDetails: async (username) => {
+		console.log('Asked for user: '+username)
+		let user = await query(`SELECT * FROM users WHERE username="${username}"`)
+		return user[0]
+	},
+
+	updateUserDetails: (details) => {
+		db.query(`UPDATE users SET full_name="${details.full_name}", email="${details.email}", phone="${details.phone}" WHERE username="${details.username}"`, (err) => {
+			if(err) console.log(err)
+		})
+	},
+
 	checkToken: async (token, username, label) => {
 		let records = null
 		

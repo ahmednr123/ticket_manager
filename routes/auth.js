@@ -45,8 +45,20 @@ router.post('/signup', (req, res) => {
 
 router.get('/login', (req, res) => {
 
+	let cards = new flash()
+	let redirect = null
+
+	if (req.query.prompt) {
+		cards.add('err', 'You have to be <b>logged in</b>')
+	}
+
+	if (req.query.redirect) {
+		// MAY HAVE TO SANITIZE
+		redirect = req.query.redirect
+	}
+
 	if(!req.session.username)
-		res.render('/auth/login.pug')
+		res.render('auth/login', {flash: cards.render(), redirect})
 	else
 		res.redirect('/')
 })
@@ -55,18 +67,30 @@ router.post('/login', async (req, res) => {
 	let username = htmlEntities(req.body.uname)
 	let password = htmlEntities(req.body.pass)
 	
-	let auth = await db.loginUser(username, password);
+	let auth = await db.loginUser(username, password)
+
+	let redirect = null
 
 	console.log(auth)
 
+	if (req.query.redirect) 
+		redirect = req.query.redirect
+
 	if(auth == true){
 		req.session.username = username
-		res.end('You are logged in!');
+
+		if (redirect) {
+			let redirect_uri = decodeURI(redirect)
+			res.redirect(redirect_uri)
+			return
+		}
+
+		res.end('you are logged in')
 	} else {
 		let cards = new flash()
 		cards.add('err', 'Wrong Credentials')
 
-		res.render('auth/login', {flash: cards.render()})
+		res.render('auth/login', {flash: cards.render(), redirect})
 	}
 })
 
