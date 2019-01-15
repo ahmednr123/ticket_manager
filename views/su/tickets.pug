@@ -1,0 +1,40 @@
+include /include/mixins.pug
+
+doctype html
+html
+	head
+		title Welcome
+		meta(charset="utf-8")
+		meta(name="viewport", content="width=device-width, initial-scale=1")
+		meta(name="viewport", content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no")
+		link(rel="stylesheet" href="/css/index.css")
+		link(rel="stylesheet" href="/css/sub.css")
+		link(rel="stylesheet" href="/css/flash.css")
+		script(src="/js/vanilla.js")
+	body
+		include /include/su_header.pug
+		god
+			section
+				include /include/flash.pug
+				form(action="/su/createTicket" method="post")
+					section
+						h2 Create Ticket
+					section
+						label Name
+						input(type="text" name="name")
+					section
+						label Description
+						textarea(name="desc")
+					section
+						label Priority
+						select(name="priority")
+							option(value=0) Hours (Red)
+							option(value=1) Days (Orange)
+							option(value=2) Weeks (Yellow)
+							option(value=3) Months (Green)
+							option(value=4) Casual (Blue)
+					section
+						label SU Password
+						input(type="text" name="password")
+					section
+						input(type="submit" value="Create")

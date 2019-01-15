@@ -31,7 +31,7 @@ module.exports = {
 		userData.password = crypt.genPassword(userData.password)
 
 		db.query(`INSERT INTO users (full_name, username, email, password, type) VALUES ("${userData.full_name}", "${userData.username}", "${userData.email}", "${userData.password}", "${userData.type}")`, (err) => {
-			if(err) console.log(err)
+			if(err) throw err
 		})
 	},
 
@@ -39,13 +39,19 @@ module.exports = {
 		password = crypt.genPassword(password)
 
 		db.query(`UPDATE users SET password="${password}" WHERE username="${username}"`, (err) => {
-			if(err) console.log(err)
+			if(err) throw err
 		})
 	},
 
 	checkUser: async (username) => {
 		let records = await query(`SELECT * FROM users WHERE username="${username}"`)
 		return (records.length > 0) ? true : false
+	},
+
+	checkUserType: async (user_type, username) => {
+		let record = await query(`SELECT type FROM users WHERE username="${username}"`)
+		console.log('FROM checkUserType '+user_type+' == '+record[0].type+', '+(record[0].type === user_type))
+		return (record[0].type === user_type)
 	},
 
 	getUserDetails: async (username) => {
@@ -56,7 +62,7 @@ module.exports = {
 
 	updateUserDetails: (details) => {
 		db.query(`UPDATE users SET full_name="${details.full_name}", email="${details.email}", phone="${details.phone}" WHERE username="${details.username}"`, (err) => {
-			if(err) console.log(err)
+			if(err) throw err
 		})
 	},
 
@@ -74,7 +80,7 @@ module.exports = {
 
 	deleteToken: (token, username, label) => {
 		db.query(`DELETE FROM tokens WHERE token="${token}" AND username="${username}" AND label="${label}"`, (err) => {
-			if(err) console.log(err)
+			if(err) throw err
 		})
 	},
 
@@ -82,20 +88,33 @@ module.exports = {
 		let token = crypt.genRandomKey(20).toString('hex')
 
 		db.query(`INSERT INTO tokens (token, username, label, birthdate, deathdate) VALUES ("${token}", "${username}", "${label}", NOW(), DATE_ADD(NOW(), INTERVAL 2 HOUR))`, (err) => {
-			if(err) console.log(err)
+			if(err) throw err
 		})
 
 		db.query('SELECT DATE_ADD(NOW(), INTERVAL 3 HOUR)', (err, result, fields) => {
-			if(err) console.log(err)
+			if(err) throw err
 			theguy.setTokenTime(db, result[0][fields[0].name], token)
 		})
 
 		return token
-
 	},
 
 	getEmail: async (username) => {
 		let records = await query(`SELECT email FROM users WHERE username="${username}";`)
 		return records[0].email
+	},
+
+	createProject: (project, callback) => {
+		db.query(`INSERT INTO projects (name, description, birthday) VALUES ("${project.name}", "${project.desc}", NOW())`, (err) => {
+			if (err) throw err
+			callback()
+		})
+	},
+
+	createTicket: (ticket, callback) => {
+		db.query(`INSERT INTO tickets (name, description, priority, birthday) VALUES ("${ticket.name}", "${ticket.desc}", "${ticket.priority}", NOW())`, (err) => {
+			if (err) throw err
+			callback()
+		})
 	}
 }

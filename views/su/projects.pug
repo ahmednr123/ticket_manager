@@ -1,0 +1,32 @@
+include /include/mixins.pug
+
+doctype html
+html
+	head
+		title Welcome
+		meta(charset="utf-8")
+		meta(name="viewport", content="width=device-width, initial-scale=1")
+		meta(name="viewport", content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no")
+		link(rel="stylesheet" href="/css/index.css")
+		link(rel="stylesheet" href="/css/sub.css")
+		link(rel="stylesheet" href="/css/flash.css")
+		script(src="/js/vanilla.js")
+	body
+		include /include/su_header.pug
+		god
+			section
+				include /include/flash.pug
+				form(action="/su/createProject" method="post")
+					section
+						h2 Create Project
+					section
+						label Name
+						input(type="text" name="name")
+					section
+						label Description
+						textarea(name="desc")
+					section
+						label SU Password
+						input(type="password" name="password")
+					section
+						input(type="submit" value="Create")

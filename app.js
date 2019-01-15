@@ -3,6 +3,7 @@ const app = express()
 
 const path = require('path')
 
+const indexRoutes = require('./routes/index.js')
 const authRoutes = require('./routes/auth.js')
 const suRoutes = require('./routes/superuser.js')
 const projRoutes = require('./routes/project.js')
@@ -18,6 +19,7 @@ app.use(express.static('public'))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
+app.use('/', indexRoutes)
 app.use('/auth', authRoutes)
 app.use('/su', suRoutes)
 app.use('/project', projRoutes)
@@ -26,12 +28,12 @@ app.use('/account', accRoutes)
 app.set('view engine', 'pug')
 app.locals.basedir = path.join(__dirname, 'views')
 
-app.get('/', (req, res) => {
+/*app.get('/', (req, res) => {
 	//if(!req.session.username)
 	//	res.redirect('/auth/login')
 	//else
 		res.render('index')
-})
+})*/
 
 app.listen(8080, () => {
 	console.log('Server started at 8080')

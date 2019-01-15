@@ -1,0 +1,40 @@
+include /include/mixins.pug
+
+doctype html
+html
+	head
+		title Welcome
+		meta(charset="utf-8")
+		meta(name="viewport", content="width=device-width, initial-scale=1")
+		meta(name="viewport", content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no")
+		link(rel="stylesheet" href="/css/index.css")
+		link(rel="stylesheet" href="/css/sub.css")
+		link(rel="stylesheet" href="/css/flash.css")
+		script(src="/js/vanilla.js")
+	body
+		include /include/su_header.pug
+		god
+			section
+				include /include/flash.pug
+				form(action="/su/createUser" method="post")
+					section
+						h2 Create User
+					section
+						label(for="fname") Full Name
+						input(type="text" name="fname")
+					section
+						label(for="uname") Username
+						input(type="text" name="uname")
+					section
+						label(for="email") Email
+						input(type="text" name="email")
+					section
+						label(for="pass") Password
+						input(type="password" name="pass")
+					section
+						label(for="type") Type
+						select(name="type")
+							option(selected) user
+							option superuser
+					section
+						input(type="submit" name="signup" value="Register")

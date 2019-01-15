@@ -64,32 +64,45 @@ router.get('/login', (req, res) => {
 })
 
 router.post('/login', async (req, res) => {
-	let username = htmlEntities(req.body.uname)
-	let password = htmlEntities(req.body.pass)
-	
-	let auth = await db.loginUser(username, password)
 
 	let redirect = null
-
-	console.log(auth)
 
 	if (req.query.redirect) 
 		redirect = req.query.redirect
 
+	let username = htmlEntities(req.body.uname)
+	let password = htmlEntities(req.body.pass)
+
+	let cards = new flash()
+
+	let isPasswordShort = password.length < 8
+
+	if(isPasswordShort) {
+		cards.add('err', 'Wrong Credentials')
+		res.render('auth/login', {flash: cards.render(), redirect})
+		return
+	}
+	
+	let auth = await db.loginUser(username, password)
+
+	console.log(auth)
+
 	if(auth == true){
 		req.session.username = username
 
-		if (redirect) {
+		if (redirect != null) {
 			let redirect_uri = decodeURI(redirect)
 			res.redirect(redirect_uri)
 			return
 		}
 
+		if (await db.checkUserType(constants.USR_SUPER, username)) {
+			res.redirect('/su')
+		}
+
 		res.end('you are logged in')
 	} else {
-		let cards = new flash()
 		cards.add('err', 'Wrong Credentials')
-
 		res.render('auth/login', {flash: cards.render(), redirect})
 	}
 })
