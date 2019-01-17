@@ -22,6 +22,11 @@ const PopUp = function (id, json) {
 
 	this.popup = ""
 
+
+	this.add_raw = function (html) {
+		this.popup += html
+	}
+
 	this.add_element = function (label, name, html) {
 		let content = `<section>`
 		content += `<label for="${name ? name : ""}"> ${label} </label>`
