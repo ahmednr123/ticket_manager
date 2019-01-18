@@ -6,10 +6,10 @@ const flash = require('../modules/flash.js')
 const constants = require('../modules/constants.js')
 
 router.get('/', (req, res) => {
-	//if(!req.session.username)
-	//	res.redirect('/auth/login')
-	//else
-		res.render('index')
+	if(!req.session.username)
+		res.redirect('/auth/login')
+	else
+		res.redirect('/project')
 })
 
 module.exports = router

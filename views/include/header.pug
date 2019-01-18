@@ -1,8 +1,14 @@
 header
-	#logo 
-		b Corp Name
-	nav.main
-		a(href="/account") Account
-		a(href="#") Tickets
-	nav.bottom
-		a(href="#") LogOut
+	.left_nav
+		#logo CHLR
+		.nav_bar
+			if super_user
+				.nav(id="admin_link") 
+					a(href="/su") Admin
+			.nav(id="projects_link") 
+				a(href="/project") Projects
+			.nav(id="tickets_link", href="tickets.html") 
+				a(href="/ticket") Tickets
+	.right_nav
+		.nav(id="account_link" style="height:42px")
+			a(href="/account") Account

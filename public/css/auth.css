@@ -1,13 +1,3 @@
-@font-face{
-	font-family: 'open-sans';
-	src: url('../fonts/OpenSans/OpenSans-Regular.ttf');
-	font-weight: 400;
-}
-
-*{
-	font-family: 'open-sans';
-}
-
 main {
 	display: flex;
 	justify-content: space-around;
@@ -23,7 +13,7 @@ a, a:visited{
 }
 
 input[type="text"], input[type="password"]{
-	width: calc(100% - 10px);
+	width: 100%;
 	padding: 5px;
 	border-radius: 5px;
 	border: 1px solid lightgrey;
@@ -33,7 +23,7 @@ input[type="text"], input[type="password"]{
 
 form {
 	width: 200px;
-	margin-top: 200px;
+	margin-top: 140px;
 }
 
 section {
@@ -46,8 +36,4 @@ section:last-child {
 
 input[type="button"], input[type="submit"] {
 	float: right;
-}
-
-#more {
-	display: none;
 }

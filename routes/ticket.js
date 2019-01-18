@@ -1,11 +1,3 @@
-/*
-
-PROJECT : {id, name, desc, creator, birthday}
-PROJECT_CONFIG : {id, ip_add, port, qr_code}
-PROJECT_GROUP : {id, username}
-
-*/
-
 let express = require('express')
 let router = express.Router()
 
@@ -17,7 +9,7 @@ router.use((req, res, next) => {
 })
 
 router.get('/', (req, res) => {
-	res.render('projects', {super_user:req.session.super_user})
+	res.render('tickets', {super_user:req.session.super_user})
 })
 
 module.exports = router

@@ -1,26 +1,24 @@
-- var action = "/auth/login?";
-- if(redirect) { action += "redirect="+encodeURI(redirect) };
-
 doctype html
 html
-head
-	title Log In
-	meta(charset="utf-8")
-	meta(name="viewport", content="width=device-width, initial-scale=1")
-	meta(name="viewport", content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no")
-	link(rel="stylesheet" href="/css/flash.css")
-	link(rel="stylesheet" href="/css/login.css")
-body
-	main
-		form(action=action method="post")
-			include /include/flash.pug
-			section
-				label(for="uname") Username
-				input(type="text" name="uname")
-			section
-				label(for="pass") Password
-				input(type="password" name="pass")
-			section
-				input(type="submit" name="submit" value="LogIn")
-			section
-				a(href="/auth/repass") Forgot password
+	head
+		title Login
+		link(rel="stylesheet" href="/css/bootstrap.css")
+		link(rel="stylesheet" href="/css/main.css")
+		link(rel="stylesheet" href="/css/auth.css")
+	body
+		include /include/auth_header.pug
+		main
+			form(action=action method="post")
+				include /include/flash.pug
+				section
+					label(for="uname") Username
+					input(type="text" name="uname")
+				section
+					label(for="pass") Password
+					input(type="password" name="pass")
+				section
+					input(type="submit" name="submit" value="LogIn")
+				section
+					a(href="/auth/repass") Forgot password
+		script.
+			document.getElementById('account_link').classList.add('selected')

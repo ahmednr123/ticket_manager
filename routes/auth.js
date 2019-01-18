@@ -89,6 +89,7 @@ router.post('/login', async (req, res) => {
 
 	if(auth == true){
 		req.session.username = username
+		req.session.super_user = false
 
 		if (redirect != null) {
 			let redirect_uri = decodeURI(redirect)
@@ -97,10 +98,11 @@ router.post('/login', async (req, res) => {
 		}
 
 		if (await db.checkUserType(constants.USR_SUPER, username)) {
-			res.redirect('/su')
+			//res.redirect('/su')
+			req.session.super_user = true
 		}
 
-		res.end('you are logged in')
+		res.redirect('/')
 	} else {
 		cards.add('err', 'Wrong Credentials')
 		res.render('auth/login', {flash: cards.render(), redirect})

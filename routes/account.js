@@ -22,7 +22,7 @@ router.get('/', async (req, res) => {
 
 	console.log(details)
 
-	res.render('account', {username, email, phone, full_name})
+	res.render('account', {super_user:req.session.super_user, username, email, phone, full_name})
 })
 
 router.post('/update', (req, res) => {

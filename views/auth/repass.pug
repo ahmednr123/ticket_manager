@@ -1,21 +1,19 @@
+doctype html
 html
-head
-	title Change Password
-	meta(charset="utf-8")
-	meta(name="viewport", content="width=device-width, initial-scale=1")
-	meta(name="viewport", content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no")
-	link(rel="stylesheet" href="/css/flash.css")
-	link(rel="stylesheet" href="/css/login.css")
-	style.
-		input[type='text'], input[type="password"]{
-			width:100%;
-		}
-body
-	main
-		form(action="/auth/repass" method="post")
-			include /include/flash.pug
-			section
-				label(for="uname") Username
-				input(type="text" name="uname")
-			section
-				input(type="submit" name="sendtoken" value="Send Token")
+	head
+		title 
+		link(rel="stylesheet" href="/css/bootstrap.css")
+		link(rel="stylesheet" href="/css/main.css")
+		link(rel="stylesheet" href="/css/auth.css")
+	body
+		include /include/auth_header.pug
+		main
+			form(action="/auth/repass" method="post")
+				include /include/flash.pug
+				section
+					label(for="uname") Username
+					input(type="text" name="uname")
+				section
+					input(type="submit" name="sendtoken" value="Send Token")
+		script.
+			document.getElementById('account_link').classList.add('selected')

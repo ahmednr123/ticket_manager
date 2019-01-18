@@ -25,12 +25,10 @@ router.use((req, res, next) => {
 })
 
 router.get('/', (req, res) => {
-	res.render('su/index')
+	res.render('admin', {super_user:req.session.super_user})
 })
 
-router.get('/projects', (req, res) => {
-	res.render('su/projects')
-})
+/*
 
 router.post('/createProject', async (req, res) => {
 	let project = {}
@@ -55,10 +53,6 @@ router.post('/createProject', async (req, res) => {
 
 		res.render('su/projects', {flash:cards.render()})
 	})
-})
-
-router.get('/tickets', (req, res) => {
-	res.render('su/tickets')
 })
 
 router.post('/createTicket', async (req, res) => {
@@ -87,9 +81,6 @@ router.post('/createTicket', async (req, res) => {
 	})
 })
 
-router.get('/users', (req, res) => {
-	res.render('su/users')
-})
 
 router.post('/createUser', async (req, res) => {
 	let cards = new flash()
@@ -112,5 +103,7 @@ router.post('/createUser', async (req, res) => {
 	cards.add('ok', 'User created')
 	res.render('su/users', {flash: cards.render()})
 })
+
+*/
 
 module.exports = router

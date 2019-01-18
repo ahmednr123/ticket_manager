@@ -1,0 +1,105 @@
+doctype html
+html
+	head
+		title Tickets
+		link(rel="stylesheet" href="css/bootstrap.css")
+		link(rel="stylesheet" href="css/github-markdown.css")
+		link(rel="stylesheet" href="css/main.css")
+	body
+		include /include/header.pug
+		table.info_table(cellspacing=0)
+			tr
+				th Name
+				th Project
+				th Handler
+				th Priority
+				th Created On
+			tr.popup_link
+				td Navigation Bar
+				td Merchant App
+				td Mortaza
+				td 
+					.priority
+				td 11-12-2018
+			tr.popup_link
+				td Map
+				td Main App
+				td Ahmed Noor
+				td 
+					.priority
+				td 11-12-2018
+		.popup_bg
+			.popup_parent
+				.popup_child
+					.ph_container.ticket
+						.ph_name Navigation Bar
+					.flash_card.fc_ok Ticket Updated!
+					table.ph_config
+						tr
+							th Project
+							td Chillar Merchant App
+						tr
+							th Handler
+							td Mortaza
+					.ph_desc
+						h2 Description
+						.ph_desc_container
+							include md.html
+					.ph_desc
+						h2 Documentation
+						.md_render_container
+							.md_render_control
+								a#md_text Text
+								a#md_render Rendered
+							.md_render_box
+								#md_text_box
+									textarea
+								#md_render_box
+									h3 Rendered
+					.ph_desc(style="display:flex;justify-content:space-around")
+						input.btn.btn-primary(type="submit" value="Update")
+						input.btn.btn-primary(type="button" value="Complete")
+						//.ph_desc_container
+							include md2.html
+		script.
+			let _global = {}
+			_global.md_text = true
+
+			document.getElementById('tickets_link').classList.add('selected')
+
+			document.addEventListener('click', (el) => {
+				if(el.target.classList.contains('popup_bg'))
+					document.getElementsByClassName('popup_bg')[0].style.display = 'none';
+			})
+
+			Array.prototype.forEach.call(document.querySelectorAll('.popup_link'), function (el) {
+				el.addEventListener('click', function () {
+					document.getElementsByClassName('popup_bg')[0].style.display = 'block';
+				})
+			});
+
+			function md_btn_click () {
+				if (_global.md_text) {
+					document.getElementById('md_text_box').style.display = 'block'
+					document.getElementById('md_render_box').style.display = 'none'
+				} else {
+					document.getElementById('md_render_box').style.display = 'block'
+					document.getElementById('md_text_box').style.display = 'none'
+				}
+			}
+
+			document.getElementById('md_text').addEventListener('click', () =>{
+				_global.md_text = true
+				md_btn_click()
+			})
+
+			document.getElementById('md_render').addEventListener('click', () =>{
+				_global.md_text = false
+				md_btn_click()
+			})
+
+			Array.prototype.forEach.call(document.querySelectorAll('textarea'), function (el) {
+				el.addEventListener('keyup', function () {
+					el.style.height = (el.scrollHeight) + 'px';
+				})
+			});

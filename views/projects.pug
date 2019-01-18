@@ -1,0 +1,76 @@
+doctype html
+html
+	head
+		title Projects
+		link(rel="stylesheet" href="css/bootstrap.css")
+		link(rel="stylesheet" href="css/github-markdown.css")
+		link(rel="stylesheet" href="css/main.css")
+	body
+		include /include/header.pug
+		.flash_card.fc_big You live only once 
+			b brother
+			| !
+		table.info_table(cellspacing=0)
+			tr
+				th Name
+				th IP Address
+				th Port
+				th Ticket Ratio
+				th Created On
+			tr.popup_link
+				td Chillar App
+				td 192.168.0.100
+				td 8080
+				td 3/12
+				td 11-12-2018
+			tr.popup_link
+				td Chillar Merchant App
+				td 192.168.0.102
+				td 8080
+				td 1/5
+				td 11-12-2018
+		.popup_bg
+			.popup_parent
+				.popup_child
+					.ph_container.project
+						.ph_name Chillar Merchant App
+					.ph_control 
+						a(href="#") Start
+						a(href="#") Restart
+					table.ph_config
+						tr
+							th Status
+							td
+								.inactive
+						tr
+							th IP Address
+							td 192.168.0.101
+						tr
+							th Port
+							td 8080
+						tr
+							th QR Code
+							td 
+								image(src="qr_code.svg")
+					.ph_desc
+						h2 Description
+						.ph_desc_container
+							include md.html
+					.ph_desc
+						h2 Documentation
+						h3 Navigation Bar
+						.ph_desc_container
+							include md2.html
+		script.
+			document.getElementById('projects_link').classList.add('selected')
+			
+			document.addEventListener('click', (el) => {
+				if(el.target.classList.contains('popup_bg'))
+					document.getElementsByClassName('popup_bg')[0].style.display = 'none';
+			})
+
+			Array.prototype.forEach.call(document.querySelectorAll('.popup_link'), function (el) {
+				el.addEventListener('click', function () {
+					document.getElementsByClassName('popup_bg')[0].style.display = 'block';
+				})
+			});
