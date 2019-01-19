@@ -28,6 +28,24 @@ router.get('/', (req, res) => {
 	res.render('admin', {super_user:req.session.super_user})
 })
 
+router.post('/createProject', async (req, res) => {
+	let project = {}
+	project.name = req.body.name
+	// - Project handlers
+	project.desc = req.body.desc
+
+	let cards = new flash()
+
+	db.createProject(project, (err) => {
+		if(err)
+			cards.add('err', 'Server Error')
+		else
+			cards.add('ok', 'Project Created')
+
+		res.render('projects', {flash:cards.render()})
+	})
+})
+
 /*
 
 router.post('/createProject', async (req, res) => {
