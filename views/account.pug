@@ -5,11 +5,12 @@ html
 		link(rel="stylesheet" href="css/bootstrap.css")
 		link(rel="stylesheet" href="css/github-markdown.css")
 		link(rel="stylesheet" href="css/main.css")
+		script(src="js/vanilla.js")
 	body
 		include /include/header.pug
 		.border_form
 			div(style="text-align:center;font-size:24px;font-weight:bold;margin-bottom:40px") Personal details
-			form
+			form(action="/account/update" method="post")
 				table.form_table
 					tr
 						td Full Name

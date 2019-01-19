@@ -199,6 +199,7 @@ header {
 
 .border_form {
 	width: 44%;
+	min-width: 340px;
 	margin: 70px auto;
 	border: 1px solid #ddd;
 	border-radius:5px;

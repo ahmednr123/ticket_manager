@@ -5,6 +5,7 @@ html
 		link(rel="stylesheet" href="css/bootstrap.css")
 		link(rel="stylesheet" href="css/github-markdown.css")
 		link(rel="stylesheet" href="css/main.css")
+		script(src="js/vanilla.js")
 	body
 		include /include/header.pug
 		.flash_card.fc_big You live only once 
@@ -61,16 +62,6 @@ html
 						h3 Navigation Bar
 						.ph_desc_container
 							include md2.html
-		script.
-			document.getElementById('projects_link').classList.add('selected')
+		script(src="js/popup.js")
+		script(src="js/views/projects.js")
 			
-			document.addEventListener('click', (el) => {
-				if(el.target.classList.contains('popup_bg'))
-					document.getElementsByClassName('popup_bg')[0].style.display = 'none';
-			})
-
-			Array.prototype.forEach.call(document.querySelectorAll('.popup_link'), function (el) {
-				el.addEventListener('click', function () {
-					document.getElementsByClassName('popup_bg')[0].style.display = 'block';
-				})
-			});

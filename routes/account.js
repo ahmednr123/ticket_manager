@@ -20,7 +20,7 @@ router.get('/', async (req, res) => {
 	let full_name = details.full_name
 	let phone = details.phone
 
-	console.log(details)
+	//console.log(details)
 
 	res.render('account', {super_user:req.session.super_user, username, email, phone, full_name})
 })

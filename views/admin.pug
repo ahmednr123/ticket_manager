@@ -5,6 +5,8 @@ html
 		link(rel="stylesheet" href="css/bootstrap.css")
 		link(rel="stylesheet" href="css/github-markdown.css")
 		link(rel="stylesheet" href="css/main.css")
+		script(src="js/vanilla.js")
+		script(src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/8.4.2/markdown-it.min.js")
 	body
 		include /include/header.pug
 		.admin_control
@@ -16,187 +18,119 @@ html
 				#tickets.popup_child
 					.ph_container.ticket
 						.ph_name Create Ticket
-					table.ph_config
-						tr
-							th Name
-							td
-								input(type="text")
-						tr
-							th Piority
-							td
-								select(name="priority")
-									option(value=0) Hours (Red)
-									option(value=1) Days (Orange)
-									option(value=2) Weeks (Yellow)
-									option(value=3) Months (Green)
-									option(value=4) Casual (Blue)
-						tr
-							th Project
-							td
-								input(type="radio" name="project")
-								|  Merchant Application
-								br
-								input(type="radio" name="project")
-								|  Consumer Application
-						tr
-							th Hanlder(s)
-							td
-								input(type="checkbox" name="project")
-								|  Ahmed Noor
-								br
-								input(type="checkbox" name="project")
-								|  Abin P
-								br
-								input(type="checkbox" name="project")
-								|  Mortaza
-					.ph_desc
-						h2 Description
-						.md_render_container
-							.md_render_control
-								a#md_text_1 Text
-								a#md_render_1 Rendered
-							.md_render_box
-								#md_text_box_1
-									textarea
-								#md_render_box_1
-									h3 Rendered
-					.ph_desc(style="display:flex;justify-content:space-around")
-						input.btn.btn-primary(type="button" value="Create")
+					form(name="ticket_form" id="ticket_form")
+						table.ph_config
+							tr
+								th Name
+								td
+									input(type="text")
+							tr#parent_ticket_query
+								th Parent Ticket
+								td
+									input(type="radio" name="parent_ticket" value="yes")
+									|  Yes
+									br
+									input(type="radio" name="parent_ticket" value="no")
+									|  No
+							tr.parent_ticket_neg
+								th Piority
+								td
+									select(name="priority")
+										option(value=0) Hours (Red)
+										option(value=1) Days (Orange)
+										option(value=2) Weeks (Yellow)
+										option(value=3) Months (Green)
+										option(value=4) Casual (Blue)
+							tr.parent_ticket_neg
+								th Project
+								td
+									input(type="radio" name="project")
+									|  Merchant Application
+									br
+									input(type="radio" name="project")
+									|  Consumer Application
+							tr.parent_ticket_neg
+								th Hanlder(s)
+								td
+									input(type="checkbox" name="handlers")
+									|  Ahmed Noor
+									br
+									input(type="checkbox" name="handlers")
+									|  Abin P
+									br
+									input(type="checkbox" name="handlers")
+									|  Mortaza
+						.ph_desc
+							h2 Description
+							.md_render_container
+								.md_render_control
+									a#md_text_1.md_event Text
+									a#md_render_1.md_event Rendered
+								.md_render_box
+									#md_text_box_1
+										textarea(name="desc_text")
+									#md_render_box_1
+										h3 Rendered
+						.ph_desc(style="display:flex;justify-content:space-around")
+							input.btn.btn-primary(type="button" value="Create")
 				#projects.popup_child
 					.ph_container.ticket
 						.ph_name Create Project
-					table.ph_config
-						tr
-							th Name
-							td
-								input(type="text")
-						tr
-							th Group
-							td
-								input(type="checkbox" name="project")
-								|  Ahmed Noor
-								br
-								input(type="checkbox" name="project")
-								|  Abin P
-								br
-								input(type="checkbox" name="project")
-								|  Mortaza
-					.ph_desc
-						h2 Description
-						.md_render_container
-							.md_render_control
-								a#md_text_2 Text
-								a#md_render_2 Rendered
-							.md_render_box
-								#md_text_box_2
-									textarea
-								#md_render_box_2
-									h3 Rendered
-					.ph_desc(style="display:flex;justify-content:space-around")
-						input.btn.btn-primary(type="button" value="Create")
+					form(name="project_form" id="project_form")
+						table.ph_config
+							tr
+								th Name
+								td
+									input(type="text")
+							tr
+								th Group
+								td
+									input(type="checkbox" name="project")
+									|  Ahmed Noor
+									br
+									input(type="checkbox" name="project")
+									|  Abin P
+									br
+									input(type="checkbox" name="project")
+									|  Mortaza
+						.ph_desc
+							h2 Description
+							.md_render_container
+								.md_render_control
+									a#md_text_2.md_event Text
+									a#md_render_2.md_event Rendered
+								.md_render_box
+									#md_text_box_2
+										textarea
+									#md_render_box_2
+										h3 Rendered
+						.ph_desc(style="display:flex;justify-content:space-around")
+							input.btn.btn-primary(type="button" value="Create")
 				#users.popup_child
 					.ph_container.ticket
 						.ph_name Create User
-					table.ph_config
-						tr
-							th Username
-							td 
-								input(type="text")
-						tr
-							th Full Name
-							td 
-								input(type="text")
-						tr
-							th Email
-							td 
-								input(type="email")
-						tr
-							th Type
-							td
-								select(name="type")
-									option(selected) user
-									option superuser
-					.ph_desc
-						input.btn.btn-primary(type="button" value="Create")
-		script.
-			let _global = {}
-			_global.md_text_one = true
-			_global.md_text_two = true
-
-			document.getElementById('admin_link').classList.add('selected')
-
-			document.addEventListener('click', (el) => {
-				if(el.target.classList.contains('popup_bg'))
-					document.getElementsByClassName('popup_bg')[0].style.display = 'none';
-			})
-
-			function hideall_popup () {
-				Array.prototype.forEach.call(document.querySelectorAll('.popup_child'), function (el) {
-					el.style.display = 'none'
-				});
-			}
-
-			Array.prototype.forEach.call(document.querySelectorAll('.popup_link'), function (el) {
-				el.addEventListener('click', function () {
-					document.getElementsByClassName('popup_bg')[0].style.display = 'block';
-					switch (el.id) {
-						case 'create_ticket':
-							hideall_popup()
-							document.getElementById('tickets').style="block"
-							break;
-						case 'create_project':
-							hideall_popup()
-							document.getElementById('projects').style="block"
-							break;
-						case 'create_user':
-							hideall_popup()
-							document.getElementById('users').style="block"
-					}
-				})
-			});
-
-			function md_btn_one_click () {
-				if (_global.md_text_one) {
-					document.getElementById('md_text_box_1').style.display = 'block'
-					document.getElementById('md_render_box_1').style.display = 'none'
-				} else {
-					document.getElementById('md_render_box_1').style.display = 'block'
-					document.getElementById('md_text_box_1').style.display = 'none'
-				}
-			}
-
-			function md_btn_two_click () {
-				if (_global.md_text_two) {
-					document.getElementById('md_text_box_2').style.display = 'block'
-					document.getElementById('md_render_box_2').style.display = 'none'
-				} else {
-					document.getElementById('md_render_box_2').style.display = 'block'
-					document.getElementById('md_text_box_2').style.display = 'none'
-				}
-			}
-
-			document.getElementById('md_text_1').addEventListener('click', () =>{
-				_global.md_text_one = true
-				md_btn_one_click()
-			})
-
-			document.getElementById('md_render_1').addEventListener('click', () =>{
-				_global.md_text_one = false
-				md_btn_one_click()
-			})
-
-			document.getElementById('md_text_2').addEventListener('click', () =>{
-				_global.md_text_two = true
-				md_btn_two_click()
-			})
-
-			document.getElementById('md_render_2').addEventListener('click', () =>{
-				_global.md_text_two = false
-				md_btn_two_click()
-			})
-
-			Array.prototype.forEach.call(document.querySelectorAll('textarea'), function (el) {
-				el.addEventListener('keyup', function () {
-					el.style.height = (el.scrollHeight) + 'px';
-				})
-			});
+					form(name="user_form" id="user_form")
+						table.ph_config
+							tr
+								th Username
+								td 
+									input(type="text")
+							tr
+								th Full Name
+								td 
+									input(type="text")
+							tr
+								th Email
+								td 
+									input(type="email")
+							tr
+								th Type
+								td
+									select(name="type")
+										option(selected) user
+										option superuser
+						.ph_desc
+							input.btn.btn-primary(type="button" value="Create")
+		script(src="js/popup.js")
+		script(src="js/markdown.js")
+		script(src="js/views/admin.js")
