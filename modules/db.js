@@ -55,9 +55,13 @@ module.exports = {
 	},
 
 	getUserDetails: async (username) => {
-		console.log('Asked for user: '+username)
 		let user = await query(`SELECT * FROM users WHERE username="${username}"`)
 		return user[0]
+	},
+
+	getAllUsers: async () => {
+		let users = await query(`SELECT username, email, full_name, type FROM users`)
+		return users
 	},
 
 	updateUserDetails: (details) => {
@@ -105,7 +109,7 @@ module.exports = {
 	},
 
 	createProject: (project, callback) => {
-		db.query(`INSERT INTO projects (name, description, birthday) VALUES ("${project.name}", "${project.desc}", NOW())`, (err) => {
+		db.query(`INSERT INTO projects (name, description, repo_name, birthday) VALUES ("${project.name}", "${project.desc}", "${project.repo_name}", NOW())`, (err) => {
 			if (err) throw err
 			callback()
 		})

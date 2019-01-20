@@ -3,6 +3,10 @@ let _global = {}
 _global.md_text_one = true
 _global.md_text_two = true
 
+xhrRequest('/account/all', (res) => {
+	_global.users = JSON.parse(res)
+})
+
 document.getElementById('admin_link').classList.add('selected')
 
 document.addEventListener('click', (el) => {
@@ -14,6 +18,7 @@ function hideall_popup () {
 	Array.prototype.forEach.call(document.querySelectorAll('.popup_child'), function (el) {
 		el.style.display = 'none'
 	});
+	$('.loader').style.display = 'block'
 }
 
 Array.prototype.forEach.call(document.querySelectorAll('.popup_link'), function (el) {
@@ -32,15 +37,17 @@ Array.prototype.forEach.call(document.querySelectorAll('.popup_link'), function 
 				for(let i = 0, max = radios.length; i < max; i++) {
 					radios[i].checked = false
 				}
-
+				$('.loader').style.display = 'none'
 				document.getElementById('tickets').style="block"
 				break;
 			case 'create_project':
 				hideall_popup()
+				$('.loader').style.display = 'none'
 				document.getElementById('projects').style="block"
 				break;
 			case 'create_user':
 				hideall_popup()
+				$('.loader').style.display = 'none'
 				document.getElementById('users').style="block"
 		}
 	})
@@ -109,4 +116,14 @@ for(let i = 0, max = radios.length; i < max; i++) {
         	//$('#parent_ticket_query').parentNode.removeChild($('#parent_ticket_query'))
         }
     }
+}
+
+function put_users (name, users) {
+	$forEach('.all_users', () => {
+		
+	})
+}
+
+function input_checkbox (name, values) {
+
 }

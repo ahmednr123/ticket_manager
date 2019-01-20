@@ -25,6 +25,15 @@ router.get('/', async (req, res) => {
 	res.render('account', {super_user:req.session.super_user, username, email, phone, full_name})
 })
 
+router.get('/all', async (req, res) => {
+	if(req.session.username && req.session.super_user){
+		let users = await db.getAllUsers()
+		res.end(JSON.stringify(users)) 
+	} else {
+		res.end('404')
+	}
+})
+
 router.post('/update', (req, res) => {
 
 	if (!req.session.username) {

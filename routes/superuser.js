@@ -32,7 +32,9 @@ router.post('/createProject', async (req, res) => {
 	let project = {}
 	project.name = req.body.name
 	// - Project handlers
+	project.group = req.body.project_group
 	project.desc = req.body.desc
+	project.repo_name = req.body.repo_name
 
 	let cards = new flash()
 

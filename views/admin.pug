@@ -15,6 +15,7 @@ html
 			button#create_user.popup_link.btn.btn-primary Create User
 		.popup_bg
 			.popup_parent
+				.loader
 				#tickets.popup_child
 					.ph_container.ticket
 						.ph_name Create Ticket
@@ -51,7 +52,7 @@ html
 									|  Consumer Application
 							tr.parent_ticket_neg
 								th Hanlder(s)
-								td
+								td.all_users
 									input(type="checkbox" name="handlers")
 									|  Ahmed Noor
 									br
@@ -81,17 +82,21 @@ html
 							tr
 								th Name
 								td
-									input(type="text")
+									input(type="text" name="name")
+							tr
+								th Repo Name
+								td
+									input(type="text" name="repo_name")
 							tr
 								th Group
-								td
-									input(type="checkbox" name="project")
+								td.all_users
+									input(type="checkbox" name="project_group")
 									|  Ahmed Noor
 									br
-									input(type="checkbox" name="project")
+									input(type="checkbox" name="project_group")
 									|  Abin P
 									br
-									input(type="checkbox" name="project")
+									input(type="checkbox" name="project_group")
 									|  Mortaza
 						.ph_desc
 							h2 Description
