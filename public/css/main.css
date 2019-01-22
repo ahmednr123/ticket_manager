@@ -20,6 +20,7 @@
 
 body {
 	width: 60%;
+	min-width: 640px;
 	margin: 0 auto;
 }
 
@@ -198,8 +199,7 @@ header {
 }
 
 .border_form {
-	width: 44%;
-	min-width: 340px;
+	width: 470px;
 	margin: 70px auto;
 	border: 1px solid #ddd;
 	border-radius:5px;
@@ -374,3 +374,14 @@ section {
 }
 
 /* ======== */
+
+.tag {
+	color: grey;
+	font-size: 12px;
+	margin-left: 4px;
+}
+
+.delete_btn {
+	color: red !important;
+	font-size: 10px;
+}

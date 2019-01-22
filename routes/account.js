@@ -5,6 +5,11 @@ const db = require('../modules/db.js')
 const flash = require('../modules/flash.js')
 const constants = require('../modules/constants.js')
 
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' }); 
+
+const fs = require('fs')
+
 router.get('/', async (req, res) => {
 
 	if (!req.session.username) {
@@ -20,9 +25,15 @@ router.get('/', async (req, res) => {
 	let full_name = details.full_name
 	let phone = details.phone
 
-	//console.log(details)
+	let ssh_pubs = await db.getSSH(req.session.username)
 
-	res.render('account', {super_user:req.session.super_user, username, email, phone, full_name})
+	for (let i = 0; i < ssh_pubs.length; i++)
+		ssh_pubs[i].date = ssh_pubs[i].added_on.toLocaleString().split(',')[0]
+
+	if(ssh_pubs.length == 0)
+		ssh_pubs = undefined
+
+	res.render('account', {super_user:req.session.super_user, username, email, phone, full_name, ssh_pubs})
 })
 
 router.get('/all', async (req, res) => {
@@ -34,12 +45,26 @@ router.get('/all', async (req, res) => {
 	}
 })
 
-router.post('/update', (req, res) => {
+router.post('/update', upload.single('ssh_pub'), (req, res) => {
 
 	if (!req.session.username) {
 		let redirect_uri = "/account"
 		let encoded_redirect = encodeURI(redirect_uri)
 		res.redirect(`/auth/login?prompt=login&redirect=${encoded_redirect}`)
+		return
+	}
+
+	if (req.file) {
+		console.log(`Got a file: (${global.appRoot}/${req.file.path})`)
+		let ssh_pub_name = req.body.ssh_pub_name
+		let ssh_pub = fs.readFileSync(`${global.appRoot}/${req.file.path}`)
+
+		fs.appendFileSync(`/home/git/.ssh/authorized_keys`, ssh_pub)
+		db.addSSH(ssh_pub_name, req.session.username, ssh_pub)
+		fs.unlink(`${global.appRoot}/${req.file.path}`, (err) => {
+			if (err) throw err;
+		})
+
 		return
 	}
 

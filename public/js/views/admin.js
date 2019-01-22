@@ -5,6 +5,8 @@ _global.md_text_two = true
 
 xhrRequest('/account/all', (res) => {
 	_global.users = JSON.parse(res)
+	console.log(_global.users)
+	put_users (_global.users)
 })
 
 document.getElementById('admin_link').classList.add('selected')
@@ -27,7 +29,6 @@ Array.prototype.forEach.call(document.querySelectorAll('.popup_link'), function 
 		switch (el.id) {
 			case 'create_ticket':
 				hideall_popup()
-
 				let parent_ticket_neg = $('.parent_ticket_neg', 'all')
 	        	for(let i = 0; i < parent_ticket_neg.length; i++){
 	        		parent_ticket_neg[i].style.display = "table-row"
@@ -118,12 +119,36 @@ for(let i = 0, max = radios.length; i < max; i++) {
     }
 }
 
-function put_users (name, users) {
-	$forEach('.all_users', () => {
-		
+function put_users (users) {
+	$forEach('.all_users', (el) => {
+		if (el.getAttribute('name') == 'ticket') {
+			el.innerHTML = input_checkbox ('ticket_handlers', users)
+		} else if (el.getAttribute('name') == 'project') {
+			el.innerHTML = input_checkbox ('project_group', users) 
+		}
 	})
 }
 
-function input_checkbox (name, values) {
+function input_checkbox (name, users) {
+	let html = ``
+	let super_user = `<span class="tag">(su)</span>`
+	for (let i = 0; i < users.length; i++) {
+		let innerHTML = `<input type="checkbox" name=${name} value=${users[i].username}> ${users[i].full_name}${(users[i].type=='superuser')?super_user:''} <br>`
+		html += innerHTML
+	}
 
+	return html.slice(0, html.length - 4)
 }
+
+$forEach('.delete_btn', (el) => {
+	el.addEventListener('click', (ev) => {
+		if (el.getAttribute('action') == 'delete_user') {
+			let username = el.getAttribute('username')
+			if(confirm(`Delete user: "${username}"?`)) {
+				xhrRequest(`/delete?username=${username}`, (res) => {
+					console.log(`Deleted user: ${username}, reply: ${res}`)
+				})
+			}
+		}
+	})
+})

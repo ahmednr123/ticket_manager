@@ -10,7 +10,7 @@ html
 		include /include/header.pug
 		.border_form
 			div(style="text-align:center;font-size:24px;font-weight:bold;margin-bottom:40px") Personal details
-			form(action="/account/update" method="post")
+			form(action="/account/update" method="post" enctype="multipart/form-data")
 				table.form_table
 					tr
 						td Full Name
@@ -24,6 +24,22 @@ html
 						td Phone
 						td
 							input(type="phone" name="phone" value=phone)
+					tr
+						td SSH Keys
+						td 
+							if ssh_pubs
+								each ssh_pub in ssh_pubs
+									span #{ssh_pub.name}
+									span.tag #{ssh_pub.date}
+							else
+								span No SSH keys present
+					tr
+						td 
+							| SSH PubKey
+						td
+							input(type="text" name="ssh_pub_name" placeholder="SSH Key Name")
+							br
+							input(type="file" name="ssh_pub")
 				section(style="display:flex;justify-content:space-around")
 					input(type="submit" value="Update", style="margin-top:30px;")
 		script.

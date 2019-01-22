@@ -18,14 +18,15 @@ const flash = require('../modules/flash.js')
 const constants = require('../modules/constants.js')
 
 router.use((req, res, next) => {
-	if(!req.session.username)
+	if(!req.session.username || !req.session.super_user)
 		res.redirect('/auth/login')
 	else
 		next()
 })
 
-router.get('/', (req, res) => {
-	res.render('admin', {super_user:req.session.super_user})
+router.get('/', async (req, res) => {
+	let users = await db.getAllUsers()
+	res.render('admin', {super_user:req.session.super_user, users})
 })
 
 router.post('/createProject', async (req, res) => {

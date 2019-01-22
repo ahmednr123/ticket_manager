@@ -3,6 +3,8 @@ const app = express()
 
 const path = require('path')
 
+global.appRoot = path.resolve(__dirname);
+
 const indexRoutes = require('./routes/index.js')
 const authRoutes = require('./routes/auth.js')
 const suRoutes = require('./routes/superuser.js')

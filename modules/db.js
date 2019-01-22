@@ -60,7 +60,7 @@ module.exports = {
 	},
 
 	getAllUsers: async () => {
-		let users = await query(`SELECT username, email, full_name, type FROM users`)
+		let users = await query(`SELECT username, email, full_name, type, phone FROM users`)
 		return users
 	},
 
@@ -119,6 +119,17 @@ module.exports = {
 		db.query(`INSERT INTO tickets (name, description, priority, birthday) VALUES ("${ticket.name}", "${ticket.desc}", "${ticket.priority}", NOW())`, (err) => {
 			if (err) throw err
 			callback()
+		})
+	},
+
+	getSSH: async (username) => {
+		let ssh_pubs = await query(`SELECT name, added_on from user_ssh WHERE username="${username}";`)
+		return ssh_pubs
+	},
+
+	addSSH: (name, username, ssh_pub) => {
+		db.query(`INSERT INTO user_ssh (name, username, ssh_pub, added_on) VALUES ("${name}", "${username}", "${ssh_pub}", NOW())`, (err) => {
+			if(err) throw err
 		})
 	}
 }

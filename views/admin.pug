@@ -9,6 +9,28 @@ html
 		script(src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/8.4.2/markdown-it.min.js")
 	body
 		include /include/header.pug
+		table.info_table(cellspacing=0)
+			tr
+				th Name
+				th Username
+				th Email
+				th Phone
+				th Type
+				th
+			//tr
+				td Chillar App
+				td 192.168.0.100
+				td 8080
+				td 3/12
+				td 11-12-2018
+			each user in users
+				tr
+					td #{user.full_name}
+					td #{user.username}
+					td #{user.email}
+					td #{user.phone}
+					td #{user.type}
+					td.delete_btn(username=user.username action="delete_user") delete
 		.admin_control
 			button#create_ticket.popup_link.btn.btn-primary Create Ticket
 			button#create_project.popup_link.btn.btn-primary Create Project
@@ -52,15 +74,15 @@ html
 									|  Consumer Application
 							tr.parent_ticket_neg
 								th Hanlder(s)
-								td.all_users
-									input(type="checkbox" name="handlers")
-									|  Ahmed Noor
-									br
-									input(type="checkbox" name="handlers")
-									|  Abin P
-									br
-									input(type="checkbox" name="handlers")
-									|  Mortaza
+								td.all_users(name="ticket")
+									//input(type="checkbox" name="ticket_handlers")
+									//|  Ahmed Noor
+									//br
+									//input(type="checkbox" name="ticket_handlers")
+									//|  Abin P
+									//br
+									//input(type="checkbox" name="ticket_handlers")
+									//|  Mortaza
 						.ph_desc
 							h2 Description
 							.md_render_container
@@ -88,16 +110,27 @@ html
 								td
 									input(type="text" name="repo_name")
 							tr
+								th Repo Type
+								td
+									input(type="radio" name="repo_type" value="empty") 
+									|  Empty
+									br
+									input(type="radio" name="repo_type" value="node") 
+									|  NodeJs
+									br
+									input(type="radio" name="repo_type" value="react_native") 
+									|  React Native
+							tr
 								th Group
-								td.all_users
-									input(type="checkbox" name="project_group")
-									|  Ahmed Noor
-									br
-									input(type="checkbox" name="project_group")
-									|  Abin P
-									br
-									input(type="checkbox" name="project_group")
-									|  Mortaza
+								td.all_users(name="project")
+									//input(type="checkbox" name="project_group")
+									//|  Ahmed Noor
+									//br
+									//input(type="checkbox" name="project_group")
+									//|  Abin P
+									//br
+									//input(type="checkbox" name="project_group")
+									//|  Mortaza
 						.ph_desc
 							h2 Description
 							.md_render_container
