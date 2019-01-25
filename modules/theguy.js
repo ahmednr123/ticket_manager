@@ -27,7 +27,8 @@ module.exports = {
 	}
 }
 
-/*var yourscript = exec('sh shellscript.sh', 
+/*
+var yourscript = exec('sh shellscript.sh', 
 (error, stdout, stderr) => {
 	console.log(`${stdout}`);
 	console.log(`${stderr}`);

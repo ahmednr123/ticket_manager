@@ -165,7 +165,7 @@ $('#createProjectBtn').addEventListener('click', () => {
 	}
 	console.log(`/project/create?name=${project_form['name'].value}&desc=${desc}&repo_name=${project_form['repo_name'].value}&repo_type=${project_form['repo_type'].value}${pg_html}`)
 	xhrRequest(`/project/create?name=${project_form['name'].value}&desc=${desc}&repo_name=${project_form['repo_name'].value}&repo_type=${project_form['repo_type'].value}${pg_html}`, (res) => {
-
+		
 	})
 })
 
