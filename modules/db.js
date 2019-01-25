@@ -60,8 +60,20 @@ module.exports = {
 	},
 
 	getAllUsers: async () => {
-		let users = await query(`SELECT username, email, full_name, type, phone FROM users`)
+		let users = await query(`SELECT * FROM users`)
 		return users
+	},
+
+	getAllProjects: async () => {
+		//let projects = await query(`select p1.id, p1.name, p1.description, p1.birthday, p1.repo_name, p1.repo_type, 
+		//	p2.username, p3.ip_addr, p3.port, p3.qr_code from projects p1, project_handlers p2, project_config p3`)
+		let projects = await query(`SELECT id,name FROM projects`)
+		return projects
+	},
+
+	getAllTickets: async () => {
+		let tickecs = await query(`SELECT id,name FROM tickets`)
+		return tickets
 	},
 
 	updateUserDetails: (details) => {
@@ -109,10 +121,23 @@ module.exports = {
 	},
 
 	createProject: (project, callback) => {
-		db.query(`INSERT INTO projects (name, description, repo_name, birthday) VALUES ("${project.name}", "${project.desc}", "${project.repo_name}", NOW())`, (err) => {
+		db.query(`INSERT INTO projects (name, description, repo_name, repo_type, birthday) VALUES ("${project.name}", "${project.desc | ''}", "${project.repo_type}", "${project.repo_name}", NOW())`, (err, result) => {
 			if (err) throw err
+			
+			let id = result.insertId
+			for (let i = 0; i < project.group.length; i++) {
+				db.query(`INSERT INTO project_handlers (id, username) VALUES ("${id}", "${project.group[i]}")`, (err) => {
+					if (err) throw err
+				})
+			}
+
+			db.query(`INSERT INTO project_config (id, ip_addr, port) VALUES ("${id}", "192.168.0.107", "${3000 + parseInt(id)}")`, (err) => {
+				if (err) throw err
+			})
+
 			callback()
 		})
+
 	},
 
 	createTicket: (ticket, callback) => {

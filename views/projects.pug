@@ -32,11 +32,12 @@ html
 				td 11-12-2018
 			//each proj in projects
 				tr
-					td #{proj.full_name}
-					td #{proj.username}
-					td #{proj.email}
-					td #{proj.phone}
-					td #{proj.type}
+					if proj
+						td proj.full_name
+						td proj.username
+						td proj.email
+						td proj.phone
+						td proj.type
 		.popup_bg
 			.popup_parent
 				.popup_child

@@ -122,9 +122,9 @@ for(let i = 0, max = radios.length; i < max; i++) {
 function put_users (users) {
 	$forEach('.all_users', (el) => {
 		if (el.getAttribute('name') == 'ticket') {
-			el.innerHTML = input_checkbox ('ticket_handlers', users)
+			el.innerHTML = input_checkbox ('handlers', users)
 		} else if (el.getAttribute('name') == 'project') {
-			el.innerHTML = input_checkbox ('project_group', users) 
+			el.innerHTML = input_checkbox ('group', users) 
 		}
 	})
 }
@@ -152,3 +152,20 @@ $forEach('.delete_btn', (el) => {
 		}
 	})
 })
+
+$('#createProjectBtn').addEventListener('click', () => {
+	let project_form = document.forms["project_form"].elements
+	let group = project_form['group']
+	let desc = encodeURIComponent(project_form['desc'].value)
+
+	let pg_html = ''
+	for(let i = 0; i < group.length; i++){
+		if (group[i].checked)
+			pg_html += `&group=${group[i].value}`
+	}
+	console.log(`/project/create?name=${project_form['name'].value}&desc=${desc}&repo_name=${project_form['repo_name'].value}&repo_type=${project_form['repo_type'].value}${pg_html}`)
+	xhrRequest(`/project/create?name=${project_form['name'].value}&desc=${desc}&repo_name=${project_form['repo_name'].value}&repo_type=${project_form['repo_type'].value}${pg_html}`, (res) => {
+
+	})
+})
+

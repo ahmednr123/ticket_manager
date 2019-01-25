@@ -42,6 +42,7 @@ html
 					.ph_container.ticket
 						.ph_name Create Ticket
 					form(name="ticket_form" id="ticket_form")
+						.flash_msgs
 						table.ph_config
 							tr
 								th Name
@@ -55,6 +56,9 @@ html
 									br
 									input(type="radio" name="parent_ticket" value="no")
 									|  No
+							tr.parent_ticket_neg
+								th Parent Ticket
+								td.all_parent_tickets
 							tr.parent_ticket_neg
 								th Piority
 								td
@@ -100,6 +104,7 @@ html
 					.ph_container.ticket
 						.ph_name Create Project
 					form(name="project_form" id="project_form")
+						.flash_msgs
 						table.ph_config
 							tr
 								th Name
@@ -139,15 +144,16 @@ html
 									a#md_render_2.md_event Rendered
 								.md_render_box
 									#md_text_box_2
-										textarea
+										textarea(name="desc")
 									#md_render_box_2
 										h3 Rendered
 						.ph_desc(style="display:flex;justify-content:space-around")
-							input.btn.btn-primary(type="button" value="Create")
+							input.btn.btn-primary#createProjectBtn(type="button" value="Create")
 				#users.popup_child
 					.ph_container.ticket
 						.ph_name Create User
 					form(name="user_form" id="user_form")
+						.flash_msgs
 						table.ph_config
 							tr
 								th Username
