@@ -28,7 +28,7 @@ CREATE TABLE `project_config` (
   `port` varchar(10) DEFAULT NULL,
   `qr_code` text,
   KEY `id` (`id`),
-  CONSTRAINT `project_config_ibfk_1` FOREIGN KEY (`id`) REFERENCES `projects` (`id`)
+  CONSTRAINT `project_config_ibfk_1` FOREIGN KEY (`id`) REFERENCES `projects` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -54,8 +54,8 @@ CREATE TABLE `project_handlers` (
   `username` varchar(100) NOT NULL,
   KEY `id` (`id`),
   KEY `username` (`username`),
-  CONSTRAINT `project_handlers_ibfk_1` FOREIGN KEY (`id`) REFERENCES `projects` (`id`),
-  CONSTRAINT `project_handlers_ibfk_2` FOREIGN KEY (`username`) REFERENCES `users` (`username`)
+  CONSTRAINT `project_handlers_ibfk_1` FOREIGN KEY (`id`) REFERENCES `projects` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `project_handlers_ibfk_2` FOREIGN KEY (`username`) REFERENCES `users` (`username`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -110,8 +110,8 @@ CREATE TABLE `ticket_handlers` (
   `username` varchar(100) NOT NULL,
   KEY `id` (`id`),
   KEY `username` (`username`),
-  CONSTRAINT `ticket_handlers_ibfk_1` FOREIGN KEY (`id`) REFERENCES `tickets` (`id`),
-  CONSTRAINT `ticket_handlers_ibfk_2` FOREIGN KEY (`username`) REFERENCES `users` (`username`)
+  CONSTRAINT `ticket_handlers_ibfk_1` FOREIGN KEY (`id`) REFERENCES `tickets` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `ticket_handlers_ibfk_2` FOREIGN KEY (`username`) REFERENCES `users` (`username`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -136,8 +136,8 @@ CREATE TABLE `ticket_hierarchy` (
   `child_id` int(10) unsigned NOT NULL,
   KEY `id` (`id`),
   KEY `child_id` (`child_id`),
-  CONSTRAINT `ticket_hierarchy_ibfk_1` FOREIGN KEY (`id`) REFERENCES `tickets` (`id`),
-  CONSTRAINT `ticket_hierarchy_ibfk_2` FOREIGN KEY (`child_id`) REFERENCES `tickets` (`id`)
+  CONSTRAINT `ticket_hierarchy_ibfk_1` FOREIGN KEY (`id`) REFERENCES `tickets` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `ticket_hierarchy_ibfk_2` FOREIGN KEY (`child_id`) REFERENCES `tickets` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -193,7 +193,7 @@ CREATE TABLE `tokens` (
   `birthdate` datetime DEFAULT NULL,
   `deathdate` datetime DEFAULT NULL,
   KEY `username` (`username`),
-  CONSTRAINT `tokens_ibfk_1` FOREIGN KEY (`username`) REFERENCES `users` (`username`)
+  CONSTRAINT `tokens_ibfk_1` FOREIGN KEY (`username`) REFERENCES `users` (`username`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -220,7 +220,7 @@ CREATE TABLE `user_ssh` (
   `added_on` datetime NOT NULL,
   PRIMARY KEY (`name`),
   KEY `username` (`username`),
-  CONSTRAINT `user_ssh_ibfk_1` FOREIGN KEY (`username`) REFERENCES `users` (`username`)
+  CONSTRAINT `user_ssh_ibfk_1` FOREIGN KEY (`username`) REFERENCES `users` (`username`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
