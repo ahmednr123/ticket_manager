@@ -153,6 +153,27 @@ $forEach('.delete_btn', (el) => {
 	})
 })
 
+function add_flash (type, msg) {
+
+	let fc_html = ''
+	function flash_card (class, msg) {
+		return `<div class="flash_card ${class}">${msg}</div>`
+	} 
+
+	if (type=='err')
+		fc_html = flash_card('fc_err', msg)
+	else if (type=='warn')
+		fc_html = flash_card('fc_warn', msg)
+	else if (type=='ok')
+		fc_html = flash_card('fc_ok', msg)
+	else 
+		fc_html = flash_card('fc_warn', msg)
+	
+	$forEach('.flash_msgs', (el) => {
+		el.innerHTML += fc_html
+	})
+}
+
 $('#createProjectBtn').addEventListener('click', () => {
 	let project_form = document.forms["project_form"].elements
 	let group = project_form['group']
@@ -168,4 +189,3 @@ $('#createProjectBtn').addEventListener('click', () => {
 		
 	})
 })
-
