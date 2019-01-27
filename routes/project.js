@@ -35,9 +35,11 @@ router.get('/all', async (req, res) => {
 
 router.get('/create', (req, res) => {
 	if(req.session.username && req.session.super_user) {
+		let cards = new flash()
 
 		if(!req.query.group || !req.query.name || !req.query.repo_name || !req.query.repo_type) {
-			res.end('err')
+			cards.add('err', 'All fields are required!')
+			res.end(JSON.stringify(cards.render()))
 			return
 		}
 
@@ -48,9 +50,12 @@ router.get('/create', (req, res) => {
 		project.repo_name = req.query.repo_name
 		project.repo_type = req.query.repo_type
 
-		let cards = new flash()
+		//cards.add('ok', 'Project Created')
+		cards.add('err', 'Wrong Input!')
+		cards.add('warn', 'Project name already exists!')
+		cards.add('warn', 'Dont make use of spaces.')
 
-		db.createProject(project, (err) => {
+		/*db.createProject(project, (err) => {
 			if(err){
 				//cards.add('err', 'Server Error')
 				//return
@@ -62,9 +67,10 @@ router.get('/create', (req, res) => {
 			cp.exec(`mkdir /srv/git/${project.repo_name}; cd /srv/git/${project.repo_name}; git init --bare`, (err, stdout, stderr) => {
 				if (err) throw err
 				console.log(`Empty Repo created at /srv/git/${project.repo_name}`)
-				res.end(JSON.stringify({flash:cards.render()}))
+				res.end(JSON.stringify(cards.render()))
 			})
-		})
+		})*/
+		res.end(JSON.stringify(cards.render()))
 	} else 
 		res.end('404')
 })

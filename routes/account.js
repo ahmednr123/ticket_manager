@@ -79,4 +79,18 @@ router.post('/update', upload.single('ssh_pub'), (req, res) => {
 	res.redirect('/account')
 })
 
+router.get('/create', (req, res) => {
+	let cards = new flash()
+
+	if(req.session.username && req.session.super_user) {
+		console.log(req.query)
+		cards.add('ok', 'User account was created!')
+		res.end(JSON.stringify(cards.render()))
+		return
+	}
+
+	res.end('404')
+
+})
+
 module.exports = router

@@ -158,23 +158,23 @@ html
 							tr
 								th Username
 								td 
-									input(type="text")
+									input(type="text" name="username")
 							tr
 								th Full Name
 								td 
-									input(type="text")
+									input(type="text" name="full_name")
 							tr
 								th Email
 								td 
-									input(type="email")
+									input(type="email" name="email")
 							tr
 								th Type
 								td
-									select(name="type")
+									select(name="user_type")
 										option(selected) user
 										option superuser
 						.ph_desc
-							input.btn.btn-primary(type="button" value="Create")
+							input.btn.btn-primary#createUserBtn(type="button" value="Create")
 		script(src="js/popup.js")
 		script(src="js/markdown.js")
 		script(src="js/views/admin.js")

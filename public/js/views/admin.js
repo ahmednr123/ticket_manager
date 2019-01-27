@@ -12,8 +12,10 @@ xhrRequest('/account/all', (res) => {
 document.getElementById('admin_link').classList.add('selected')
 
 document.addEventListener('click', (el) => {
-	if(el.target.classList.contains('popup_bg'))
+	if(el.target.classList.contains('popup_bg')){
 		document.getElementsByClassName('popup_bg')[0].style.display = 'none';
+		clearForms()
+	}
 })
 
 function hideall_popup () {
@@ -156,8 +158,9 @@ $forEach('.delete_btn', (el) => {
 function add_flash (type, msg) {
 
 	let fc_html = ''
-	function flash_card (class, msg) {
-		return `<div class="flash_card ${class}">${msg}</div>`
+
+	let flash_card = (type, msg) => {
+		return `<div class="flash_card ${type}">${msg}</div>`
 	} 
 
 	if (type=='err')
@@ -167,10 +170,24 @@ function add_flash (type, msg) {
 	else if (type=='ok')
 		fc_html = flash_card('fc_ok', msg)
 	else 
-		fc_html = flash_card('fc_warn', msg)
+		fc_html = flash_card('fc_info', msg)
 	
 	$forEach('.flash_msgs', (el) => {
+		console.log('making changes')
 		el.innerHTML += fc_html
+	})
+
+}
+
+function clearForms(clear_flash = true) {
+	if(clear_flash) {
+		$forEach('.flash_msgs', (el) => {
+			el.innerHTML = ''
+		})
+	}
+	
+	$forEach('form', (el) => {
+		el.reset()
 	})
 }
 
@@ -184,8 +201,56 @@ $('#createProjectBtn').addEventListener('click', () => {
 		if (group[i].checked)
 			pg_html += `&group=${group[i].value}`
 	}
-	console.log(`/project/create?name=${project_form['name'].value}&desc=${desc}&repo_name=${project_form['repo_name'].value}&repo_type=${project_form['repo_type'].value}${pg_html}`)
-	xhrRequest(`/project/create?name=${project_form['name'].value}&desc=${desc}&repo_name=${project_form['repo_name'].value}&repo_type=${project_form['repo_type'].value}${pg_html}`, (res) => {
-		
+
+	$forEach('.flash_msgs', (el) => {
+		el.innerHTML = ''
 	})
+
+	console.log(`/project/create?name=${project_form['name'].value}&desc=${desc}&repo_name=${project_form['repo_name'].value}&repo_type=${project_form['repo_type'].value}${pg_html}`)
+	xhrRequest(`/project/create?name=${project_form['name'].value}&desc=${desc}&repo_name=${project_form['repo_name'].value}&repo_type=${project_form['repo_type'].value}${pg_html}`, popup_callback)
 })
+
+$('#createUserBtn').addEventListener('click', () => {
+	let user_form = document.forms["user_form"].elements
+
+	$forEach('.flash_msgs', (el) => {
+		el.innerHTML = ''
+	})
+
+	console.log(`/account/create?username=${user_form['username'].value}&full_name=${user_form['full_name'].value}&type=${user_form['user_type'].value}`)
+	xhrRequest(`/account/create?username=${user_form['username'].value}&full_name=${user_form['full_name'].value}&type=${user_form['user_type'].value}`, popup_callback)
+})
+
+function popup_callback (res) {
+	let flash = JSON.parse(res)
+	let failed = false
+	
+	console.log(flash)
+	
+	for (let i = 0; i < flash.length; i++) {
+		add_flash(flash[i].type, flash[i].msg)
+		if (flash[i].type == 'err')
+			failed = true
+	}
+
+	if(!failed)
+		clearForms(false)
+	
+	scrollToTop(600)
+}
+
+// https://stackoverflow.com/a/24559613
+function scrollToTop(scrollDuration) {
+    var cosParameter = window.scrollY / 2,
+        scrollCount = 0,
+        oldTimestamp = performance.now();
+    function step (newTimestamp) {
+        scrollCount += Math.PI / (scrollDuration / (newTimestamp - oldTimestamp));
+        if (scrollCount >= Math.PI) window.scrollTo(0, 0);
+        if (window.scrollY === 0) return;
+        window.scrollTo(0, Math.round(cosParameter + cosParameter * Math.cos(scrollCount)));
+        oldTimestamp = newTimestamp;
+        window.requestAnimationFrame(step);
+    }
+    window.requestAnimationFrame(step);
+}
