@@ -119,7 +119,7 @@ for(let i = 0, max = radios.length; i < max; i++) {
         	for(let i = 0; i < parent_ticket_neg.length; i++){
         		parent_ticket_neg[i].style.display = "table-row"
         	}
-        	$('#parent_ticket_query').style.display = "none"
+        	//$('#parent_ticket_query').style.display = "none"
         	//$('#parent_ticket_query').parentNode.removeChild($('#parent_ticket_query'))
         }
     }
@@ -135,7 +135,7 @@ function put_users (users) {
 	})
 }
 
-function put_users (users) {
+function put_parent_tickets (users) {
 	$forEach('.all_parent_tickets', (el) => {
 		if (_global.parent_tickets.length == 0) {
 			el.innerHTML = '<span style="font-size:14px;color:grey">No parent tickets available</span>'
@@ -243,6 +243,25 @@ $('#createUserBtn').addEventListener('click', () => {
 
 	console.log(`/account/create?username=${user_form['username'].value}&full_name=${user_form['full_name'].value}&email=${user_form['email'].value}&type=${user_form['user_type'].value}`)
 	xhrRequest(`/account/create?username=${user_form['username'].value}&full_name=${user_form['full_name'].value}&email=${user_form['email'].value}&type=${user_form['user_type'].value}`, popup_callback)
+})
+
+$('#createTicketBtn').addEventListener('click', () => {
+	let ticket_form = document.forms["ticket_form"].elements
+	let handlers = project_form['handlers']
+	let desc = encodeURIComponent(project_form['desc'].value)
+
+	let pg_html = ''
+	for(let i = 0; i < handlers.length; i++){
+		if (handlers[i].checked)
+			pg_html += `&group=${handlers[i].value}`
+	}
+
+	$forEach('.flash_msgs', (el) => {
+		el.innerHTML = ''
+	})
+
+	console.log(`/ticket/create?name=${ticket_form['name'].value}&desc=${desc}&repo_name=${ticket_form['repo_name'].value}&repo_type=${ticket_form['repo_type'].value}${pg_html}`)
+	xhrRequest(`/ticket/create?name=${ticket_form['name'].value}&desc=${desc}&repo_name=${ticket_form['repo_name'].value}&repo_type=${ticket_form['repo_type'].value}${pg_html}`, popup_callback)
 })
 
 function popup_callback (res) {

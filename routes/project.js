@@ -30,7 +30,9 @@ router.get('/all', async (req, res) => {
 	if(req.session.username && req.session.super_user) { 
 		let projects = await db.getAllProjects()
 		res.end(JSON.stringify(projects))
+		return
 	}
+	res.end('404')
 })
 
 router.get('/create', (req, res) => {

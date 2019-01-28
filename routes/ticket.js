@@ -1,5 +1,5 @@
-let express = require('express')
-let router = express.Router()
+const express = require('express')
+const router = express.Router()
 
 const db = require('../modules/db.js')
 const flash = require('../modules/flash.js')
