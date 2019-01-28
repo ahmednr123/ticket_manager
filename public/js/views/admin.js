@@ -5,8 +5,12 @@ _global.md_text_two = true
 
 xhrRequest('/account/all', (res) => {
 	_global.users = JSON.parse(res)
-	console.log(_global.users)
 	put_users (_global.users)
+})
+
+xhrRequest('/ticket/all', (res) => {
+	_global.parent_tickets = JSON.parse(res)
+	put_parent_tickets (_global.parent_tickets)
 })
 
 document.getElementById('admin_link').classList.add('selected')
@@ -124,18 +128,38 @@ for(let i = 0, max = radios.length; i < max; i++) {
 function put_users (users) {
 	$forEach('.all_users', (el) => {
 		if (el.getAttribute('name') == 'ticket') {
-			el.innerHTML = input_checkbox ('handlers', users)
+			el.innerHTML = user_checkbox ('handlers', users)
 		} else if (el.getAttribute('name') == 'project') {
-			el.innerHTML = input_checkbox ('group', users) 
+			el.innerHTML = user_checkbox ('group', users) 
 		}
 	})
 }
 
-function input_checkbox (name, users) {
+function put_users (users) {
+	$forEach('.all_parent_tickets', (el) => {
+		if (_global.parent_tickets.length == 0) {
+			el.innerHTML = '<span style="font-size:14px;color:grey">No parent tickets available</span>'
+		} else {
+			el.innerHTML = ticket_checkbox (name, _global.parent_tickets)
+		}
+	})
+}
+
+function user_checkbox (name, users) {
 	let html = ``
 	let super_user = `<span class="tag">(su)</span>`
 	for (let i = 0; i < users.length; i++) {
 		let innerHTML = `<input type="checkbox" name=${name} value=${users[i].username}> ${users[i].full_name}${(users[i].type=='superuser')?super_user:''} <br>`
+		html += innerHTML
+	}
+
+	return html.slice(0, html.length - 4)
+}
+
+function ticket_checkbox (name, tickets) {
+	let html = ``
+	for (let i = 0; i < tickets.length; i++) {
+		let innerHTML = `<input type="checkbox" name=${name} value=${tickets[i].id}> ${users[i].name}<br>`
 		html += innerHTML
 	}
 
@@ -217,8 +241,8 @@ $('#createUserBtn').addEventListener('click', () => {
 		el.innerHTML = ''
 	})
 
-	console.log(`/account/create?username=${user_form['username'].value}&full_name=${user_form['full_name'].value}&type=${user_form['user_type'].value}`)
-	xhrRequest(`/account/create?username=${user_form['username'].value}&full_name=${user_form['full_name'].value}&type=${user_form['user_type'].value}`, popup_callback)
+	console.log(`/account/create?username=${user_form['username'].value}&full_name=${user_form['full_name'].value}&email=${user_form['email'].value}&type=${user_form['user_type'].value}`)
+	xhrRequest(`/account/create?username=${user_form['username'].value}&full_name=${user_form['full_name'].value}&email=${user_form['email'].value}&type=${user_form['user_type'].value}`, popup_callback)
 })
 
 function popup_callback (res) {

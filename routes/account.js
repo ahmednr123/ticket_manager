@@ -79,13 +79,44 @@ router.post('/update', upload.single('ssh_pub'), (req, res) => {
 	res.redirect('/account')
 })
 
-router.get('/create', (req, res) => {
+router.get('/create', async (req, res) => {
 	let cards = new flash()
 
 	if(req.session.username && req.session.super_user) {
 		console.log(req.query)
-		cards.add('ok', 'User account was created!')
-		res.end(JSON.stringify(cards.render()))
+
+		if (!req.query.username || !req.query.full_name || !req.query.email || !req.query.type) {
+			cards.add('err', 'All fields are required!')
+			res.end(JSON.stringify(cards.render()))
+			return
+		}
+
+		let user = {}
+		user.username = req.query.username
+		user.full_name = req.query.full_name
+		user.email = req.query.email
+		user.type = req.query.type
+		user.password = ''
+
+		if (user.username.length < 5) {
+			cards.add('err', 'Username is too short')
+			res.end(JSON.stringify(cards.render()))
+			return
+		}
+
+		let isUser = await db.checkUser(user.username)
+
+		if (isUser) {
+			cards.add('err', 'Username already exists!')
+			res.end(JSON.stringify(cards.render()))
+			return
+		}
+
+		db.saveUser(user, () => {
+			cards.add('ok', 'User account was created!')
+			res.end(JSON.stringify(cards.render()))
+		})
+
 		return
 	}
 

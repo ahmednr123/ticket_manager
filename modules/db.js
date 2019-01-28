@@ -27,11 +27,12 @@ module.exports = {
 		return crypt.checkPassword(password, records[0].password)
 	},
 
-	saveUser: (userData) => {
+	saveUser: (userData, callback) => {
 		userData.password = crypt.genPassword(userData.password)
 
 		db.query(`INSERT INTO users (full_name, username, email, password, type) VALUES ("${userData.full_name}", "${userData.username}", "${userData.email}", "${userData.password}", "${userData.type}")`, (err) => {
 			if(err) throw err
+			callback()
 		})
 	},
 
@@ -71,8 +72,8 @@ module.exports = {
 		return projects
 	},
 
-	getAllTickets: async () => {
-		let tickecs = await query(`SELECT id,name FROM tickets`)
+	getAllTickets: async (isParent) => {
+		let tickets = await query(`SELECT id,name FROM tickets ${isParent?'WHERE parent=TRUE':''}`)
 		return tickets
 	},
 
