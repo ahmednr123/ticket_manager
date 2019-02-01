@@ -13,6 +13,11 @@ xhrRequest('/ticket/all', (res) => {
 	put_parent_tickets (_global.parent_tickets)
 })
 
+xhrRequest('/project/all', (res) => {
+	_global.projects = JSON.parse(res)
+	put_projects (_global.projects)
+})
+
 document.getElementById('admin_link').classList.add('selected')
 
 document.addEventListener('click', (el) => {
@@ -135,12 +140,22 @@ function put_users (users) {
 	})
 }
 
-function put_parent_tickets (users) {
+function put_parent_tickets () {
 	$forEach('.all_parent_tickets', (el) => {
 		if (_global.parent_tickets.length == 0) {
 			el.innerHTML = '<span style="font-size:14px;color:grey">No parent tickets available</span>'
 		} else {
-			el.innerHTML = ticket_checkbox (name, _global.parent_tickets)
+			el.innerHTML = ticket_checkbox ('parent_ticket', _global.parent_tickets)
+		}
+	})
+}
+
+function put_projects () {
+	$forEach('.all_projects', (el) => {
+		if (_global.projects.length == 0) {
+			el.innerHTML = '<span style="font-size:14px;color:grey">No projects available</span>'
+		} else {
+			el.innerHTML = project_radiobox ('project', _global.projects)
 		}
 	})
 }
@@ -159,7 +174,17 @@ function user_checkbox (name, users) {
 function ticket_checkbox (name, tickets) {
 	let html = ``
 	for (let i = 0; i < tickets.length; i++) {
-		let innerHTML = `<input type="checkbox" name=${name} value=${tickets[i].id}> ${users[i].name}<br>`
+		let innerHTML = `<input type="checkbox" name=${name} value=${tickets[i].id}> ${tickets[i].name}<br>`
+		html += innerHTML
+	}
+
+	return html.slice(0, html.length - 4)
+}
+
+function project_radiobox (name, projects) {
+	let html = ``
+	for (let i = 0; i < projects.length; i++) {
+		let innerHTML = `<input type="radio" name=${name} value=${projects[i].id}> ${projects[i].name}<br>`
 		html += innerHTML
 	}
 

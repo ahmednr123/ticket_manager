@@ -48,6 +48,14 @@ html
 								th Name
 								td
 									input(type="text")
+							tr
+								th Project
+								td.all_projects
+									input(type="radio" name="project")
+									|  Merchant Application
+									br
+									input(type="radio" name="project")
+									|  Consumer Application
 							tr#parent_ticket_query
 								th Parent Ticket
 								td
@@ -68,14 +76,6 @@ html
 										option(value=2) Weeks (Yellow)
 										option(value=3) Months (Green)
 										option(value=4) Casual (Blue)
-							tr.parent_ticket_neg
-								th Project
-								td
-									input(type="radio" name="project")
-									|  Merchant Application
-									br
-									input(type="radio" name="project")
-									|  Consumer Application
 							tr.parent_ticket_neg
 								th Hanlder(s)
 								td.all_users(name="ticket")
