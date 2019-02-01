@@ -49,7 +49,7 @@ router.get('/create', (req, res) => {
 		project.name = req.query.name
 		project.group = req.query.group
 		project.desc = decodeURI(req.query.desc)
-		project.repo_name = req.query.repo_name
+		project.repo_name = req.query.repo_name + '.git'
 		project.repo_type = req.query.repo_type
 
 		//cards.add('ok', 'Project Created')
@@ -57,7 +57,7 @@ router.get('/create', (req, res) => {
 		cards.add('warn', 'Project name already exists!')
 		cards.add('warn', 'Dont make use of spaces.')
 
-		/*db.createProject(project, (err) => {
+		db.createProject(project, (err) => {
 			if(err){
 				//cards.add('err', 'Server Error')
 				//return
@@ -66,12 +66,13 @@ router.get('/create', (req, res) => {
 			
 			cards.add('ok', 'Project Created')
 
-			cp.exec(`mkdir /srv/git/${project.repo_name}; cd /srv/git/${project.repo_name}; git init --bare`, (err, stdout, stderr) => {
+			cp.exec(`mkdir /srv/git/${project.repo_name}; cd /srv/git; chown git:git ${project.repo_name}; cd ${project.repo_name}; git init --bare`, (err, stdout, stderr) => {
 				if (err) throw err
 				console.log(`Empty Repo created at /srv/git/${project.repo_name}`)
 				res.end(JSON.stringify(cards.render()))
 			})
-		})*/
+		})
+
 		res.end(JSON.stringify(cards.render()))
 	} else 
 		res.end('404')

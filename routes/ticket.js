@@ -25,25 +25,40 @@ router.get('/all', async (req, res) => {
 	res.end('404')
 })
 
-router.post('/create', async (req, res) => {
+router.get('/create', async (req, res) => {
 	if(req.session.username && req.session.super_user) {
+		let cards = new flash()
+
+		if(!req.query.handlers || !req.query.name || !req.query.priority || !req.query.parent) {
+			cards.add('err', 'All fields are required!')
+			res.end(JSON.stringify(cards.render()))
+			return
+		}
+
 		let ticket = {}
 		ticket.name = req.query.name
 		ticket.desc = req.query.desc
 		ticket.priority = req.query.priority
 		ticket.handlers = req.query.handlers
+		ticket.parent = req.query.parent
 
-		let cards = new flash()
-
-		db.createTicket(ticket, (err) => {
+		console.log(JSON.stringify(ticket))
+		/*db.createTicket(ticket, (err) => {
 			if(err)
 				cards.add('err', 'Server Error')
 			else
 				cards.add('ok', 'Ticket Created')
 
 			res.render('su/tickets', {flash: cards.render()})
-		})
+		})*/
+		cards.add('ok', 'Ticket created')
+
+		res.end(JSON.stringify(cards.render()))
+
+		return
 	}
+
+	res.end('404')
 })
 
 module.exports = router

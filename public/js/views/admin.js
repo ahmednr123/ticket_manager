@@ -272,21 +272,32 @@ $('#createUserBtn').addEventListener('click', () => {
 
 $('#createTicketBtn').addEventListener('click', () => {
 	let ticket_form = document.forms["ticket_form"].elements
-	let handlers = project_form['handlers']
-	let desc = encodeURIComponent(project_form['desc'].value)
+	
+	//console.log(ticket_form)
+
+	let handlers = ticket_form['handlers']
+	let desc = encodeURIComponent(ticket_form['desc'].value)
+
+	console.log(handlers)
 
 	let pg_html = ''
 	for(let i = 0; i < handlers.length; i++){
 		if (handlers[i].checked)
-			pg_html += `&group=${handlers[i].value}`
+			pg_html += `&handlers=${handlers[i].value}`
 	}
+
+	console.log(pg_html)
+	console.log('name: '+ticket_form['name'])
+	console.log('desc: '+ticket_form['desc'])
+	console.log('priority: '+ticket_form['priority'])
+	console.log('parent: '+ticket_form['parent_ticket'])
 
 	$forEach('.flash_msgs', (el) => {
 		el.innerHTML = ''
 	})
 
-	console.log(`/ticket/create?name=${ticket_form['name'].value}&desc=${desc}&repo_name=${ticket_form['repo_name'].value}&repo_type=${ticket_form['repo_type'].value}${pg_html}`)
-	xhrRequest(`/ticket/create?name=${ticket_form['name'].value}&desc=${desc}&repo_name=${ticket_form['repo_name'].value}&repo_type=${ticket_form['repo_type'].value}${pg_html}`, popup_callback)
+	console.log(`/ticket/create?name=${ticket_form['name'].value}&desc=${desc}&priority=${ticket_form['priority'].value}&parent=${ticket_form['parent_ticket'].value}${pg_html}`)
+	xhrRequest(`/ticket/create?name=${ticket_form['name'].value}&desc=${desc}&priority=${ticket_form['priority'].value}&parent=${ticket_form['parent_ticket'].value}${pg_html}`, popup_callback)
 })
 
 function popup_callback (res) {
