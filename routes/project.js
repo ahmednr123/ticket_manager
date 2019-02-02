@@ -48,7 +48,7 @@ router.get('/create', (req, res) => {
 		let project = {}
 		project.name = req.query.name
 		project.group = req.query.group
-		project.desc = decodeURI(req.query.desc)
+		project.desc = decodeURIComponent(req.query.desc)
 		project.repo_name = req.query.repo_name + '.git'
 		project.repo_type = req.query.repo_type
 

@@ -29,18 +29,35 @@ router.get('/create', async (req, res) => {
 	if(req.session.username && req.session.super_user) {
 		let cards = new flash()
 
-		if(!req.query.handlers || !req.query.name || !req.query.priority || !req.query.parent) {
+		if(!req.query.name || !req.query.parent) {
 			cards.add('err', 'All fields are required!')
+			res.end(JSON.stringify(cards.render()))
+			return
+		} else if (!req.query.project) {
+			cards.add('err', 'A ticket must be under a project')
 			res.end(JSON.stringify(cards.render()))
 			return
 		}
 
 		let ticket = {}
 		ticket.name = req.query.name
-		ticket.desc = req.query.desc
+		ticket.project = req.query.project
+		ticket.parent_project = req.query.parent_project
+		ticket.desc = decodeURIComponent(req.query.desc)
 		ticket.priority = req.query.priority
 		ticket.handlers = req.query.handlers
-		ticket.parent = req.query.parent
+		ticket.parent = (req.query.parent==1)?true:false
+
+		if (!ticket.parent) {
+			if (!req.query.handlers || !req.query.priority)
+				cards.add('err', 'All fields are required!')
+			
+			if (ticket.desc.length < 100) 
+				cards.add('err', 'Description must be more than <b>100 letters!</b>')
+
+			res.end(JSON.stringify(cards.render()))
+			return
+		}
 
 		console.log(JSON.stringify(ticket))
 		/*db.createTicket(ticket, (err) => {

@@ -296,7 +296,7 @@ $('#createTicketBtn').addEventListener('click', () => {
 		el.innerHTML = ''
 	})
 
-	console.log(`/ticket/create?name=${ticket_form['name'].value}&desc=${desc}&priority=${ticket_form['priority'].value}&parent=${ticket_form['parent_ticket'].value}${pg_html}`)
+	console.log(`/ticket/create?name=${ticket_form['name'].value}&project=${ticket_form['project'].value}&parent_ticket=${ticket_form['parent_ticket'].value}&desc=${desc}&priority=${ticket_form['priority'].value}&parent=${ticket_form['parent_ticket'].value}${pg_html}`)
 	xhrRequest(`/ticket/create?name=${ticket_form['name'].value}&desc=${desc}&priority=${ticket_form['priority'].value}&parent=${ticket_form['parent_ticket'].value}${pg_html}`, popup_callback)
 })
 

@@ -142,6 +142,7 @@ module.exports = {
 	},
 
 	createTicket: (ticket, callback) => {
+		
 		db.query(`INSERT INTO tickets (name, description, priority, birthday) VALUES ("${ticket.name}", "${ticket.desc}", "${ticket.priority}", NOW())`, (err) => {
 			if (err) throw err
 			callback()
