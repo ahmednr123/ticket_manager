@@ -46,29 +46,31 @@ router.get('/create', (req, res) => {
 		}
 
 		let project = {}
-		project.name = req.query.name
+		project.name = decodeURIComponent(req.query.name)
 		project.group = req.query.group
-		project.desc = decodeURIComponent(req.query.desc)
+		project.desc = (req.query.desc)?decodeURIComponent(req.query.desc):""
 		project.repo_name = req.query.repo_name + '.git'
 		project.repo_type = req.query.repo_type
 
-		//cards.add('ok', 'Project Created')
-		cards.add('err', 'Wrong Input!')
-		cards.add('warn', 'Project name already exists!')
-		cards.add('warn', 'Dont make use of spaces.')
+		cards.add('ok', 'Project Created')
+		//cards.add('err', 'Wrong Input!')
+		//cards.add('warn', 'Project name already exists!')
+		//cards.add('warn', 'Dont make use of spaces.')
 
 		db.createProject(project, (err) => {
 			if(err){
-				//cards.add('err', 'Server Error')
-				//return
+				cards.add('err', 'Server Error')
 				throw err
+				return
 			}
 			
 			cards.add('ok', 'Project Created')
 
-			cp.exec(`mkdir /srv/git/${project.repo_name}; cd /srv/git; chown git:git ${project.repo_name}; cd ${project.repo_name}; git init --bare`, (err, stdout, stderr) => {
+			cp.exec(`mkdir /srv/git/${project.repo_name}; git init --bare /srv/git/${project.repo_name}`, (err, stdout, stderr) => {
 				if (err) throw err
-				console.log(`Empty Repo created at /srv/git/${project.repo_name}`)
+				console.log(`=============================`)
+				console.log(stdout)
+				console.log(`=============================`)
 				res.end(JSON.stringify(cards.render()))
 			})
 		})

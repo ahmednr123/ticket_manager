@@ -3,20 +3,24 @@ let _global = {}
 _global.md_text_one = true
 _global.md_text_two = true
 
-xhrRequest('/account/all', (res) => {
-	_global.users = JSON.parse(res)
-	put_users (_global.users)
-})
+function loadData () {
+	xhrRequest('/account/all', (res) => {
+		_global.users = JSON.parse(res)
+		put_users (_global.users)
+	})
 
-xhrRequest('/ticket/all', (res) => {
-	_global.parent_tickets = JSON.parse(res)
-	put_parent_tickets (_global.parent_tickets)
-})
+	xhrRequest('/ticket/all', (res) => {
+		_global.parent_tickets = JSON.parse(res)
+		put_parent_tickets (_global.parent_tickets)
+	})
 
-xhrRequest('/project/all', (res) => {
-	_global.projects = JSON.parse(res)
-	put_projects (_global.projects)
-})
+	xhrRequest('/project/all', (res) => {
+		_global.projects = JSON.parse(res)
+		put_projects (_global.projects)
+	})
+}
+
+loadData ()
 
 document.getElementById('admin_link').classList.add('selected')
 
@@ -37,6 +41,7 @@ function hideall_popup () {
 Array.prototype.forEach.call(document.querySelectorAll('.popup_link'), function (el) {
 	el.addEventListener('click', function () {
 		document.getElementsByClassName('popup_bg')[0].style.display = 'block';
+		loadData ()
 		switch (el.id) {
 			case 'create_ticket':
 				hideall_popup()
@@ -45,7 +50,7 @@ Array.prototype.forEach.call(document.querySelectorAll('.popup_link'), function 
 	        		parent_ticket_neg[i].style.display = "table-row"
 	        	}
 	        	$('#parent_ticket_query').style.display = "table-row"
-	        	let radios = document.forms["ticket_form"].elements["parent_ticket"];
+	        	let radios = document.forms["ticket_form"].elements["parent_ticket_query"];
 				for(let i = 0, max = radios.length; i < max; i++) {
 					radios[i].checked = false
 				}
@@ -111,10 +116,10 @@ Array.prototype.forEach.call(document.querySelectorAll('textarea'), function (el
 	})
 });
 
-let radios = document.forms["ticket_form"].elements["parent_ticket"];
+let radios = document.forms["ticket_form"].elements["parent_ticket_query"];
 for(let i = 0, max = radios.length; i < max; i++) {
     radios[i].onclick = function() {
-        if(this.value === 'yes'){
+        if(this.value === '1'){
         	let parent_ticket_neg = $('.parent_ticket_neg', 'all')
         	for(let i = 0; i < parent_ticket_neg.length; i++){
         		parent_ticket_neg[i].style.display = "none"
@@ -145,7 +150,7 @@ function put_parent_tickets () {
 		if (_global.parent_tickets.length == 0) {
 			el.innerHTML = '<span style="font-size:14px;color:grey">No parent tickets available</span>'
 		} else {
-			el.innerHTML = ticket_checkbox ('parent_ticket', _global.parent_tickets)
+			el.innerHTML = ticket_radiobox ('parent_ticket', _global.parent_tickets)
 		}
 	})
 }
@@ -171,10 +176,10 @@ function user_checkbox (name, users) {
 	return html.slice(0, html.length - 4)
 }
 
-function ticket_checkbox (name, tickets) {
+function ticket_radiobox (name, tickets) {
 	let html = ``
 	for (let i = 0; i < tickets.length; i++) {
-		let innerHTML = `<input type="checkbox" name=${name} value=${tickets[i].id}> ${tickets[i].name}<br>`
+		let innerHTML = `<input type="radio" name=${name} value=${tickets[i].id}> ${tickets[i].name}<br>`
 		html += innerHTML
 	}
 
@@ -242,21 +247,15 @@ function clearForms(clear_flash = true) {
 
 $('#createProjectBtn').addEventListener('click', () => {
 	let project_form = document.forms["project_form"].elements
-	let group = project_form['group']
-	let desc = encodeURIComponent(project_form['desc'].value)
-
-	let pg_html = ''
-	for(let i = 0; i < group.length; i++){
-		if (group[i].checked)
-			pg_html += `&group=${group[i].value}`
-	}
 
 	$forEach('.flash_msgs', (el) => {
 		el.innerHTML = ''
 	})
 
-	console.log(`/project/create?name=${project_form['name'].value}&desc=${desc}&repo_name=${project_form['repo_name'].value}&repo_type=${project_form['repo_type'].value}${pg_html}`)
-	xhrRequest(`/project/create?name=${project_form['name'].value}&desc=${desc}&repo_name=${project_form['repo_name'].value}&repo_type=${project_form['repo_type'].value}${pg_html}`, popup_callback)
+	let url = '/project/create?' + getArguments(project_form)
+
+	console.log(url)
+	xhrRequest(url, popup_callback)
 })
 
 $('#createUserBtn').addEventListener('click', () => {
@@ -266,41 +265,51 @@ $('#createUserBtn').addEventListener('click', () => {
 		el.innerHTML = ''
 	})
 
-	console.log(`/account/create?username=${user_form['username'].value}&full_name=${user_form['full_name'].value}&email=${user_form['email'].value}&type=${user_form['user_type'].value}`)
-	xhrRequest(`/account/create?username=${user_form['username'].value}&full_name=${user_form['full_name'].value}&email=${user_form['email'].value}&type=${user_form['user_type'].value}`, popup_callback)
+	let url = '/account/create?' + getArguments(user_form)
+
+	console.log(url)
+	xhrRequest(url, popup_callback)
 })
 
 $('#createTicketBtn').addEventListener('click', () => {
 	let ticket_form = document.forms["ticket_form"].elements
-	
-	//console.log(ticket_form)
-
-	let handlers = ticket_form['handlers']
-	let desc = encodeURIComponent(ticket_form['desc'].value)
-
-	console.log(handlers)
-
-	let pg_html = ''
-	for(let i = 0; i < handlers.length; i++){
-		if (handlers[i].checked)
-			pg_html += `&handlers=${handlers[i].value}`
-	}
-
-	console.log(pg_html)
-	console.log('name: '+ticket_form['name'])
-	console.log('desc: '+ticket_form['desc'])
-	console.log('priority: '+ticket_form['priority'])
-	console.log('parent: '+ticket_form['parent_ticket'])
 
 	$forEach('.flash_msgs', (el) => {
 		el.innerHTML = ''
 	})
 
-	console.log(`/ticket/create?name=${ticket_form['name'].value}&project=${ticket_form['project'].value}&parent_ticket=${ticket_form['parent_ticket'].value}&desc=${desc}&priority=${ticket_form['priority'].value}&parent=${ticket_form['parent_ticket'].value}${pg_html}`)
-	xhrRequest(`/ticket/create?name=${ticket_form['name'].value}&desc=${desc}&priority=${ticket_form['priority'].value}&parent=${ticket_form['parent_ticket'].value}${pg_html}`, popup_callback)
+	let url = '/ticket/create?' + getArguments(ticket_form)
+
+	console.log(url)
+	xhrRequest(url, popup_callback)
 })
 
+
+function getArguments (form) {
+	function CheckWithAll (val, arr) {
+		let check = false
+
+		for (let i = 0; i < arr.length; i++)
+			check = check || (val == arr[i])
+
+		return check
+	}
+
+	let url = ''
+
+	for (let i in form) {
+		console.log(`${form[i].name} => ${form[i].value}`)
+		if( CheckWithAll(form[i].type, ['text', 'email', 'password', 'radio', 'select-one', 'checkbox', 'textarea']) ){
+			if((form[i].type != 'radio' || form[i].checked) && (form[i].type != 'checkbox' || form[i].checked))
+				url += `${form[i].name}=${encodeURIComponent(form[i].value)}&`
+		}
+	}
+
+	return url.slice(0, url.length - 1)
+}
+
 function popup_callback (res) {
+	console.log(res)
 	let flash = JSON.parse(res)
 	let failed = false
 	

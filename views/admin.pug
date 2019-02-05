@@ -59,11 +59,15 @@ html
 							tr#parent_ticket_query
 								th Parent Ticket
 								td
-									input(type="radio" name="parent_ticket" value="yes")
+									input(type="radio" name="parent_ticket_query" value="1")
 									|  Yes
 									br
-									input(type="radio" name="parent_ticket" value="no")
+									input(type="radio" name="parent_ticket_query" value="0")
 									|  No
+							tr.parent_ticket_neg
+								th Ticket ID
+								td
+									input(type="text" name="ticket_id")
 							tr.parent_ticket_neg
 								th Parent Ticket
 								td.all_parent_tickets

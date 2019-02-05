@@ -92,10 +92,10 @@ router.get('/create', async (req, res) => {
 		}
 
 		let user = {}
-		user.username = req.query.username
-		user.full_name = req.query.full_name
-		user.email = req.query.email
-		user.type = req.query.type
+		user.username = decodeURIComponent(req.query.username)
+		user.full_name = decodeURIComponent(req.query.full_name)
+		user.email = decodeURIComponent(req.query.email)
+		user.type = decodeURIComponent(req.query.user_type)
 		user.password = ''
 
 		if (user.username.length < 5) {

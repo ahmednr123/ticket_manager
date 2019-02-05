@@ -122,7 +122,7 @@ module.exports = {
 	},
 
 	createProject: (project, callback) => {
-		db.query(`INSERT INTO projects (name, description, repo_name, repo_type, birthday) VALUES ("${project.name}", "${project.desc | ''}", "${project.repo_type}", "${project.repo_name}", NOW())`, (err, result) => {
+		db.query(`INSERT INTO projects (name, description, repo_name, repo_type, birthday) VALUES ("${project.name}", "${project.desc | ''}", "${project.repo_name}", "${project.repo_type}", NOW())`, (err, result) => {
 			if (err) throw err
 			
 			let id = result.insertId
@@ -142,11 +142,27 @@ module.exports = {
 	},
 
 	createTicket: (ticket, callback) => {
-		
-		db.query(`INSERT INTO tickets (name, description, priority, birthday) VALUES ("${ticket.name}", "${ticket.desc}", "${ticket.priority}", NOW())`, (err) => {
-			if (err) throw err
-			callback()
-		})
+
+		if (ticket.parent) {
+			db.query(`INSERT INTO tickets (name, description, birthday, parent) VALUES ("${ticket.name}", "${ticket.desc}", NOW(), 1)`, (err) => {
+				if (err) throw err
+				callback()
+			})
+		} else {
+			db.query(`INSERT INTO tickets (name, ticket_id, description, priority, birthday, parent) VALUES ("${ticket.name}", "${ticket.ticket_id}", "${ticket.desc}", "${ticket.priority}", NOW(), 0)`, (err, result) => {
+				if (err) throw err
+				let id = result.insertId
+				db.query(`INSERT INTO ticket_hierarchy (id, child_id) VALUES (${ticket.project}, ${id})`, (err) => {
+					if (err) throw err
+				})
+				for (let i = 0; i < ticket.handlers.length; i++) {
+					db.query(`INSERT INTO ticket_handlers (id, username) VALUES (${id}, ${ticket.handlers[i]})`, (err) => {
+						if (err) throw err
+					})
+				}
+				callback()
+			})
+		}
 	},
 
 	getSSH: async (username) => {
