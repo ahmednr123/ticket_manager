@@ -3,8 +3,8 @@ const util = require('util')
 const config = require('../configuration.js')
 
 const crypt = require('./crypt.js')
-
 const theguy = require('./theguy.js')
+const constants = require('./constants.js')
 
 const db = mysql.createConnection({
 	host: config.mysql_host,
@@ -66,15 +66,19 @@ module.exports = {
 	},
 
 	getAllProjects: async () => {
-		//let projects = await query(`select p1.id, p1.name, p1.description, p1.birthday, p1.repo_name, p1.repo_type, 
-		//	p2.username, p3.ip_addr, p3.port, p3.qr_code from projects p1, project_handlers p2, project_config p3`)
-		let projects = await query(`SELECT id,name FROM projects`)
+		let projects = await query(`SELECT p.id, p.name, p.repo_name, p.birthday, conf.ip_addr, conf.port  FROM projects p, project_config conf WHERE conf.id = p.id`)
 		return projects
 	},
 
 	getAllTickets: async (isParent) => {
-		let tickets = await query(`SELECT id,name FROM tickets ${isParent?'WHERE parent=TRUE':''}`)
-		return tickets
+		if(isParent)
+			return await query(`SELECT id,name FROM tickets WHERE parent=TRUE`)
+		else
+			return await query(`SELECT tickets.id, tickets.name, priority, projects.name as project_name, tickets.birthday from tickets inner join projects on projects.id=tickets.project`)
+	},
+
+	getTicketHandlers: async (id) => {
+		return await query(`SELECT GROUP_CONCAT(users.full_name) FROM users, ticket_handlers WHERE users.username = ticket_handlers.username AND ticket_handlers.id = ${id}`)[0]
 	},
 
 	updateUserDetails: (details) => {
@@ -122,10 +126,11 @@ module.exports = {
 	},
 
 	createProject: (project, callback) => {
-		db.query(`INSERT INTO projects (name, description, repo_name, repo_type, birthday) VALUES ("${project.name}", "${project.desc | ''}", "${project.repo_name}", "${project.repo_type}", NOW())`, (err, result) => {
+		db.query(`INSERT INTO projects (name, repo_name, repo_type, birthday) VALUES ("${project.name}", "${project.repo_name}", "${project.repo_type}", NOW())`, (err, result) => {
 			if (err) throw err
 			
 			let id = result.insertId
+
 			for (let i = 0; i < project.group.length; i++) {
 				db.query(`INSERT INTO project_handlers (id, username) VALUES ("${id}", "${project.group[i]}")`, (err) => {
 					if (err) throw err
@@ -136,7 +141,7 @@ module.exports = {
 				if (err) throw err
 			})
 
-			callback()
+			callback(err, id)
 		})
 
 	},
@@ -144,23 +149,29 @@ module.exports = {
 	createTicket: (ticket, callback) => {
 
 		if (ticket.parent) {
-			db.query(`INSERT INTO tickets (name, description, birthday, parent) VALUES ("${ticket.name}", "${ticket.desc}", NOW(), 1)`, (err) => {
-				if (err) throw err
-				callback()
-			})
-		} else {
-			db.query(`INSERT INTO tickets (name, ticket_id, description, priority, birthday, parent) VALUES ("${ticket.name}", "${ticket.ticket_id}", "${ticket.desc}", "${ticket.priority}", NOW(), 0)`, (err, result) => {
+			db.query(`INSERT INTO tickets (name, birthday, parent, project) VALUES ("${ticket.name}", NOW(), 1, ${ticket.project})`, (err, result) => {
 				if (err) throw err
 				let id = result.insertId
-				db.query(`INSERT INTO ticket_hierarchy (id, child_id) VALUES (${ticket.project}, ${id})`, (err) => {
+				callback(err, id)
+			})
+		} else {
+			db.query(`INSERT INTO tickets (name, ticket_id, priority, birthday, parent, project) VALUES ("${ticket.name}", "${ticket.ticket_id}", "${ticket.priority}", NOW(), 0, ${ticket.project})`, (err, result) => {
+				if (err) throw err
+
+				let id = result.insertId
+
+				db.query(`INSERT INTO ticket_hierarchy (id, child_id) VALUES (${ticket.parent_ticket}, ${id})`, (err) => {
 					if (err) throw err
 				})
+
 				for (let i = 0; i < ticket.handlers.length; i++) {
-					db.query(`INSERT INTO ticket_handlers (id, username) VALUES (${id}, ${ticket.handlers[i]})`, (err) => {
+					console.log(`Handler: ${ticket.handlers[i]}`)
+					db.query(`INSERT INTO ticket_handlers (id, username) VALUES (${id}, "${ticket.handlers[i]}")`, (err) => {
 						if (err) throw err
 					})
 				}
-				callback()
+
+				callback(err, id)
 			})
 		}
 	},
@@ -174,5 +185,26 @@ module.exports = {
 		db.query(`INSERT INTO user_ssh (name, username, ssh_pub, added_on) VALUES ("${name}", "${username}", "${ssh_pub}", NOW())`, (err) => {
 			if(err) throw err
 		})
+	},
+
+	saveMarkdown: async (origin, id, type, html) => {
+		if(origin === 'project')
+			await query(`UPDATE projects SET ${constants.MD_DESC}=${mysql.escape(html)} WHERE id=${id}`)
+		else if (origin === 'ticket')
+			await query(`UPDATE tickets SET ${type}=${mysql.escape(html)} WHERE id=${id}`)
+		else
+			throw new Error()
+		
+		return 'ok'
+	},
+
+	getMarkdown: async (origin, id, type) => {
+		let html = ''
+		if(origin === 'project')
+			html = await query(`SELECT ${constants.MD_DESC} FROM projects WHERE id=${id}`)
+		else if (origin === 'ticket')
+			html = await query(`SELECT ${type} FROM tickets WHERE id=${id}`)
+
+		return html[0][constants.MD_DESC]
 	}
 }

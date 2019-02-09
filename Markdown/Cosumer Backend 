@@ -1,0 +1,39 @@
+## Cosumer Backend - Chillar App
+
+### Basic Atuhentication
+ At the beginning stage of the development a basic authentication must be provided to the application by the backend. Later on SSL can be added few weeks before going to production. Other than authentication the application must be fully functional.
+
+### Procedure of authentication
+As mentioned in the UI design ticket, the consumer application checks if the user is registered, if it is, then the application must send the password to the server to verify. The server then creates a token session and sends it back to the user. 
+
+If the user is not registered then the user must be verified using an OTP. Once the user is verified the application has to setup a local passkey that the user can use to authenticate he token.
+
+Following are the steps:
+- User enters its mobile number.
+- Server checks if the user is present in the database and sends back the response
+- If the response is TRUE (User found in DB),
+  - The application must send a password to authenticate the user
+- If the response is FALSE (User not found),
+  - The server sends an OTP to the user
+  - User is verified
+  - User enters a new password
+  - Server stores the password and sends a token back to the application
+  - Application is responsible to prompt a passkey which is to be stored locally
+  - This passkey encrypts the token
+  - The encrypted token is then saved locally
+
+If the token is present locally the user is prompted to enter the passkey on opening the application. The passkey is then used to decrypt the token and save it temporarily in RAM during the user session. User can also use fingerprint, this functionality can be added later on.
+
+SELECT Paper.`title`, GROUP_CONCAT(Author.`authorName`) as `authors`
+FROM Paper_Author
+INNER JOIN Paper
+  ON Paper.paperId = Paper_Author.paperId
+INNER JOIN Author
+  ON Author.authorId = Paper_Author.authorId
+group by Paper.`title`
+
+SELECT t.id, t.name, p.name, t.priority, t.birthday, u.username FROM tickets t, projects p, users u, ticket_handlers th WHERE p.id=t.project AND th.id = t.id AND u.username = th.username;
+
+SELECT tickets.id, tickets.name, priority, projects.name, users.full_name, tickets.birthday from tickets full outer join projects on projects.id = tickets.project full outer join ticket_handlers on ticket_handlers.id = tickets.id full outer join users on users.username=ticket_handlers.username;
+
+SELECT tickets.id, tickets.name, priority, projects.name as project_name, users.full_name as handlers, tickets.birthday from tickets left join ticket_handlers on ticket_handlers.id = tickets.id left join users on users.username=ticket_handlers.username inner join projects on projects.id=tickets.project;

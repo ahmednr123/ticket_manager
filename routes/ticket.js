@@ -4,6 +4,7 @@ const router = express.Router()
 const db = require('../modules/db.js')
 const flash = require('../modules/flash.js')
 const constants = require('../modules/constants.js')
+const fs_system = require('../modules/fs_system.js')
 
 router.use((req, res, next) => {
 	if(!req.session.username)
@@ -19,6 +20,7 @@ router.get('/', (req, res) => {
 router.get('/all', async (req, res) => {
 	if(req.session.username && req.session.super_user) { 
 		let tickets = await db.getAllTickets(req.query.isParent)
+		
 		res.end(JSON.stringify(tickets))
 		return
 	}
@@ -46,10 +48,16 @@ router.get('/create', async (req, res) => {
 		ticket.desc = decodeURIComponent(req.query.desc)
 		ticket.priority = req.query.priority
 		ticket.handlers = req.query.handlers
+
+		if (typeof(ticket.handlers) == 'string')
+			ticket.handlers = [ticket.handlers]
+
 		ticket.parent = (req.query.parent_ticket_query==1)?true:false
 		ticket.parent_ticket = req.query.parent_ticket
 
 		console.log(ticket)
+
+		let type = constants.MD_DESC
 
 		if (!ticket.parent) {
 			if (!req.query.handlers || !req.query.priority) {
@@ -65,8 +73,10 @@ router.get('/create', async (req, res) => {
 			}
 		}
 
-		console.log(JSON.stringify(ticket))
-		db.createTicket(ticket, (err) => {
+		db.createTicket(ticket, async (err, id) => {
+
+			await fs_system.saveMarkdown('ticket', id, type, ticket.desc)
+
 			if(err)
 				cards.add('err', 'Server Error')
 			else
@@ -74,6 +84,7 @@ router.get('/create', async (req, res) => {
 
 			res.end(JSON.stringify(cards.render()))
 		})
+
 		cards.add('ok', 'Ticket created')
 
 		res.end(JSON.stringify(cards.render()))
@@ -82,6 +93,26 @@ router.get('/create', async (req, res) => {
 	}
 
 	res.end('404')
+})
+
+router.get('/update', async (req, res) => {
+
+	let cards = new flash()
+
+	let id = req.query.id
+	let type = req.query.type
+	let desc = (req.query.desc)?decodeURIComponent(req.query.desc):""
+
+	if(type !== constants.MD_DESC && type !== constants.MD_DOC){
+		cards.add('err', '"Type" error')
+		res.end(JSON.stringify(cards.render()))
+		return
+	}
+
+	await fs_system.saveMarkdown('ticket', id, constants.MD_DESC, desc)
+
+	cards.add('ok', 'Ticket updated')
+	res.end(JSON.stringify(cards.render()))
 })
 
 module.exports = router

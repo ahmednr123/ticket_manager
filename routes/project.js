@@ -12,6 +12,8 @@ const router = express.Router()
 
 const db = require('../modules/db.js')
 const flash = require('../modules/flash.js')
+const fs_system = require('../modules/fs_system.js')
+const constants = require('../modules/constants.js')
 
 const cp = require('child_process')
 
@@ -22,8 +24,9 @@ router.use((req, res, next) => {
 		next()
 })
 
-router.get('/', (req, res) => {
-	res.render('projects', {super_user:req.session.super_user})
+router.get('/', async (req, res) => {
+	let projects = await db.getAllProjects()
+	res.render('projects', {super_user:req.session.super_user, projects})
 })
 
 router.get('/all', async (req, res) => {
@@ -57,12 +60,14 @@ router.get('/create', (req, res) => {
 		//cards.add('warn', 'Project name already exists!')
 		//cards.add('warn', 'Dont make use of spaces.')
 
-		db.createProject(project, (err) => {
+		db.createProject(project, async (err, id) => {
 			if(err){
 				cards.add('err', 'Server Error')
 				throw err
 				return
 			}
+
+			await fs_system.saveMarkdown('project', id, constants.MD_DESC, project.desc)
 			
 			cards.add('ok', 'Project Created')
 
@@ -78,6 +83,18 @@ router.get('/create', (req, res) => {
 		res.end(JSON.stringify(cards.render()))
 	} else 
 		res.end('404')
+})
+
+router.get('/update', async (req, res) => {
+	let cards = new flash()
+
+	let id = req.query.id
+	let desc = (req.query.desc)?decodeURIComponent(req.query.desc):""
+
+	await fs_system.saveMarkdown('project', id, constants.MD_DESC, desc)
+
+	cards.add('ok', 'Ticket updated')
+	res.end(JSON.stringify(cards.render()))
 })
 
 module.exports = router

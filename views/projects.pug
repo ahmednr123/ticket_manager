@@ -8,36 +8,39 @@ html
 		script(src="js/vanilla.js")
 	body
 		include /include/header.pug
-		.flash_card.fc_big You live only once 
-			b brother
-			| !
 		table.info_table(cellspacing=0)
-			tr
+			//tr
 				th Name
 				th IP Address
 				th Port
 				th Ticket Ratio
 				th Created On
-			tr.popup_link
+			//tr.popup_link
 				td Chillar App
 				td 192.168.0.100
 				td 8080
 				td 3/12
 				td 11-12-2018
-			tr.popup_link
+			//tr.popup_link
 				td Chillar Merchant App
 				td 192.168.0.102
 				td 8080
 				td 1/5
 				td 11-12-2018
-			//each proj in projects
-				tr
+			tr
+				th Name
+				th Repo Name
+				th IP Address
+				th Port
+				th Created On
+			each proj in projects
+				tr.popup_link(project_id=proj.id)
 					if proj
-						td proj.full_name
-						td proj.username
-						td proj.email
-						td proj.phone
-						td proj.type
+						td #{proj.name}
+						td #{proj.repo_name}
+						td #{proj.ip_addr}
+						td #{proj.port}
+						td #{proj.birthday.toLocaleDateString()}
 		.popup_bg
 			.popup_parent
 				.popup_child
