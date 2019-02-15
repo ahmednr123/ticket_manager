@@ -95,12 +95,17 @@ html
 							h2 Description
 							.md_render_container
 								.md_render_control
-									a#md_text_1.md_event Text
-									a#md_render_1.md_event Rendered
+									//a#md_text_1.md_event Text
+									a.md_event(md-element="1" md-type="text" href="#") Text
+									a.md_event(md-element="1" md-type="render" href="#") Render
+									//a#md_render_1.md_event Rendered
 								.md_render_box
-									#md_text_box_1
+									//#md_text_box_1
 										textarea(name="desc")
-									#md_render_box_1
+									.md_block(md-element="1" md-type="text")
+										textarea(name="desc")
+									.md_block(md-element="1" md-type="render")
+									//#md_render_box_1
 										h3 Rendered
 						.ph_desc(style="display:flex;justify-content:space-around")
 							input.btn.btn-primary#createTicketBtn(type="button" value="Create")
@@ -144,12 +149,17 @@ html
 							h2 Description
 							.md_render_container
 								.md_render_control
-									a#md_text_2.md_event Text
-									a#md_render_2.md_event Rendered
+									//a#md_text_2.md_event Text
+									//a#md_render_2.md_event Rendered
+									a.md_event(md-element="2" md-type="text" href="#") Text
+									a.md_event(md-element="2" md-type="render" href="#") Render
 								.md_render_box
-									#md_text_box_2
+									//#md_text_box_2
 										textarea(name="desc")
-									#md_render_box_2
+									.md_block(md-element="2" md-type="text")
+										textarea(name="desc")
+									.md_block(md-element="2" md-type="render")
+									//#md_render_box_2
 										h3 Rendered
 						.ph_desc(style="display:flex;justify-content:space-around")
 							input.btn.btn-primary#createProjectBtn(type="button" value="Create")

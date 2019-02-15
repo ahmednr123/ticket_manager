@@ -323,13 +323,13 @@ section {
 	margin-right: 10px;
 }
 
-#md_text_box, #md_text_box_1, #md_text_box_2, 
+textarea, #md_text_box, #md_text_box_1, #md_text_box_2, 
 #md_text_box textarea, #md_text_box_1 textarea, #md_text_box_2 textarea{
 	width: 100%;
 	resize: none;
 }
 
-#md_text_box textarea, #md_text_box_1 textarea, #md_text_box_2 textarea {
+textarea, #md_text_box textarea, #md_text_box_1 textarea, #md_text_box_2 textarea {
 	min-height: 200px;
 }
 

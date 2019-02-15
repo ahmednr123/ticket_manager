@@ -1,4 +1,4 @@
-## Authentication Screens
+## Authentication Screen
 
 ### Verifying User
 We get the account id from the user and confirm with the server

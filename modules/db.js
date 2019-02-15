@@ -65,20 +65,35 @@ module.exports = {
 		return users
 	},
 
+	getProject: async (id) => {
+		let project = await query(`SELECT p.id, p.name, p.repo_name, p.birthday, conf.ip_addr, conf.port  FROM projects p, project_config conf WHERE conf.id = p.id AND p.id = ${id}`)
+		return project[0]
+	},
+
 	getAllProjects: async () => {
 		let projects = await query(`SELECT p.id, p.name, p.repo_name, p.birthday, conf.ip_addr, conf.port  FROM projects p, project_config conf WHERE conf.id = p.id`)
 		return projects
+	},
+
+	getTicket: async (id) => {
+		let ticket = await query(`SELECT tickets.id, tickets.ticket_id, tickets.name, priority, projects.name as project_name, tickets.birthday from tickets inner join projects on projects.id=tickets.project AND tickets.id=${id}`)
+		ticket = ticket[0]
+		let handlers = await query(`SELECT GROUP_CONCAT(users.full_name) FROM users, ticket_handlers WHERE users.username = ticket_handlers.username AND ticket_handlers.id = ${id}`)
+		ticket.handlers = handlers[0]['GROUP_CONCAT(users.full_name)']
+		
+		return ticket
 	},
 
 	getAllTickets: async (isParent) => {
 		if(isParent)
 			return await query(`SELECT id,name FROM tickets WHERE parent=TRUE`)
 		else
-			return await query(`SELECT tickets.id, tickets.name, priority, projects.name as project_name, tickets.birthday from tickets inner join projects on projects.id=tickets.project`)
+			return await query(`SELECT tickets.id, tickets.ticket_id, tickets.name, priority, projects.name as project_name, tickets.birthday from tickets inner join projects on projects.id=tickets.project`)
 	},
 
 	getTicketHandlers: async (id) => {
-		return await query(`SELECT GROUP_CONCAT(users.full_name) FROM users, ticket_handlers WHERE users.username = ticket_handlers.username AND ticket_handlers.id = ${id}`)[0]
+		let handlers = await query(`SELECT GROUP_CONCAT(users.full_name) FROM users, ticket_handlers WHERE users.username = ticket_handlers.username AND ticket_handlers.id = ${id}`)
+		return handlers[0]['GROUP_CONCAT(users.full_name)']
 	},
 
 	updateUserDetails: (details) => {
@@ -97,6 +112,11 @@ module.exports = {
 			records = await query(`SELECT * FROM tokens WHERE token="${token}" AND username="${username}" AND label="${label}"`)
 		
 		return records.length//(records.length > 0) ? true : false
+	},
+
+	checkHandler: async (ticket_id, username) => {
+		let records = query(`select * from ticket_handlers WHERE id=${mysql.escape(ticket_id)} AND username="${mysql.escape(username)}"`)
+		return (records.length > 0)?true:false
 	},
 
 	deleteToken: (token, username, label) => {
@@ -174,6 +194,10 @@ module.exports = {
 				callback(err, id)
 			})
 		}
+	},
+
+	completeTicket: (id) => {
+		db.query(`UPDATE tickets SET completed=true WHERE id=${id}`)
 	},
 
 	getSSH: async (username) => {

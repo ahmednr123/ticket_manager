@@ -1,7 +1,4 @@
-
 let _global = {}
-_global.md_text_one = true
-_global.md_text_two = true
 
 function loadData () {
 	xhrRequest('/account/all', (res) => {
@@ -69,46 +66,6 @@ Array.prototype.forEach.call(document.querySelectorAll('.popup_link'), function 
 		}
 	})
 });
-
-function md_btn_one_click () {
-	if (_global.md_text_one) {
-		document.getElementById('md_text_box_1').style.display = 'block'
-		document.getElementById('md_render_box_1').style.display = 'none'
-	} else {
-		document.getElementById('md_render_box_1').style.display = 'block'
-		document.getElementById('md_text_box_1').style.display = 'none'
-	}
-}
-
-function md_btn_two_click () {
-	if (_global.md_text_two) {
-		document.getElementById('md_text_box_2').style.display = 'block'
-		document.getElementById('md_render_box_2').style.display = 'none'
-	} else {
-		document.getElementById('md_render_box_2').style.display = 'block'
-		document.getElementById('md_text_box_2').style.display = 'none'
-	}
-}
-
-document.getElementById('md_text_1').addEventListener('click', () =>{
-	_global.md_text_one = true
-	md_btn_one_click()
-})
-
-document.getElementById('md_render_1').addEventListener('click', () =>{
-	_global.md_text_one = false
-	md_btn_one_click()
-})
-
-document.getElementById('md_text_2').addEventListener('click', () =>{
-	_global.md_text_two = true
-	md_btn_two_click()
-})
-
-document.getElementById('md_render_2').addEventListener('click', () =>{
-	_global.md_text_two = false
-	md_btn_two_click()
-})
 
 Array.prototype.forEach.call(document.querySelectorAll('textarea'), function (el) {
 	el.addEventListener('keyup', function () {

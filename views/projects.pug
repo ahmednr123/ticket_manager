@@ -6,6 +6,7 @@ html
 		link(rel="stylesheet" href="css/github-markdown.css")
 		link(rel="stylesheet" href="css/main.css")
 		script(src="js/vanilla.js")
+		script(src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/8.4.2/markdown-it.min.js")
 	body
 		include /include/header.pug
 		table.info_table(cellspacing=0)
@@ -43,36 +44,53 @@ html
 						td #{proj.birthday.toLocaleDateString()}
 		.popup_bg
 			.popup_parent
+				.loader
 				.popup_child
 					.ph_container.project
-						.ph_name Chillar Merchant App
-					.ph_control 
+						.ph_name#proj_name Chillar Merchant App
+					//.ph_control 
 						a(href="#") Start
 						a(href="#") Restart
 					table.ph_config
-						tr
+						//tr
 							th Status
 							td
 								.inactive
 						tr
 							th IP Address
-							td 192.168.0.101
+							td#proj_ip 192.168.0.101
 						tr
 							th Port
-							td 8080
-						tr
-							th QR Code
-							td 
-								image(src="qr_code.svg")
-					.ph_desc
-						h2 Description
-						.ph_desc_container
-							include md.html
+							td#proj_port 8080
+					if super_user
+						.ph_desc
+							h2 Description
+							.md_render_container
+								.md_render_control
+									//a#md_text.md_event Text
+									//a#md_render.md_event Rendered
+									a.md_event(md-element="1" md-type="text" href="#") Text
+									a.md_event(md-element="1" md-type="render" href="#") Render
+								.md_render_box
+									.md_block(md-element="1" md-type="text")
+										textarea(name="desc")
+									.md_block(md-element="1" md-type="render")
+									//#md_text_box
+										textarea
+									//#md_render_box
+						.ph_desc(style="display:flex;justify-content:space-around")
+							input.btn.btn-primary#update(type="button" value="Update")
+					else
+						.ph_desc
+							h2 Description
+							#proj_desc.ph_desc_container
+								include md.html
 					.ph_desc
 						h2 Documentation
 						h3 Navigation Bar
 						.ph_desc_container
 							include md2.html
 		script(src="js/popup.js")
+		script(src="js/markdown.js")
 		script(src="js/views/projects.js")
 			

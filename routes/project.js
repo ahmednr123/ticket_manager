@@ -38,6 +38,15 @@ router.get('/all', async (req, res) => {
 	res.end('404')
 })
 
+router.get('/node', async (req, res) => {
+	let project = await db.getProject(req.query.id)
+	let md = await fs_system.getMarkdown('project', project.id, constants.MD_DESC)
+	project.desc_html = md.html
+	project.desc_md = md.markdown
+
+	res.end(JSON.stringify(project))
+})
+
 router.get('/create', (req, res) => {
 	if(req.session.username && req.session.super_user) {
 		let cards = new flash()

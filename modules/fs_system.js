@@ -27,6 +27,7 @@ const system = {
 
 	getMarkdown: async (origin, id, type) => {
 		let md_url = ''
+		let markdown = '';
 
 		if(origin === 'project')
 			md_url = `${system_dir}/markdown/project/${id}.md`
@@ -35,8 +36,13 @@ const system = {
 		else
 			throw new Error()
 
-		let markdown = fs.readFileSync(md_url)
-		let html = await db.getMarkdown(origin, id, type)
+		try {
+			markdown = fs.readFileSync(md_url, 'utf8')
+		} catch (e) {
+			console.log(e)
+		}
+		
+		let html = await db.getMarkdown(origin, id, type) || " "
 
 		return {markdown, html}
 	}

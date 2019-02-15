@@ -1,3 +1,5 @@
+- let md_index = 1
+
 doctype html
 html
 	head
@@ -12,57 +14,74 @@ html
 		table.info_table(cellspacing=0)
 			tr
 				th Name
+				th Ticket ID
 				th Project
 				th Handler
 				th Priority
 				th Created On
-			tr.popup_link
-				td Navigation Bar
-				td Merchant App
-				td Mortaza
-				td 
-					.priority
-				td 11-12-2018
-			tr.popup_link
-				td Map
-				td Main App
-				td Ahmed Noor
-				td 
-					.priority
-				td 11-12-2018
+			each ticket in tickets
+				tr.popup_link(ticket_id=ticket.id)
+					if ticket
+						td #{ticket.name}
+						td #{(ticket.ticket_id)?ticket.ticket_id:'-'}
+						td #{ticket.project_name}
+						td #{(ticket.handlers)?ticket.handlers:'-'}
+						td #{ticket.priority}
+						td #{ticket.birthday.toLocaleDateString()}
 		.popup_bg
 			.popup_parent
+				.loader
 				.popup_child
 					.ph_container.ticket
-						.ph_name Navigation Bar
-					.flash_card.fc_ok Ticket Updated!
+						.ph_name#ticket_name Navigation Bar
 					table.ph_config
 						tr
 							th Project
-							td Chillar Merchant App
+							td#ticket_proj_name Chillar Merchant App
 						tr
 							th Handler
-							td Mortaza
-					.ph_desc
-						h2 Description
-						.ph_desc_container
-							include md.html
+							td#ticket_handlers Mortaza
+						tr
+							th Ticket ID
+							td#ticket_id
+					if super_user
+						.ph_desc
+							h2 Description
+							.md_render_container
+								.md_render_control
+									a.md_event(md-element=md_index md-type="text" href="#") Text
+									a.md_event(md-element=md_index md-type="render" href="#") Render
+								.md_render_box
+									.md_block(md-element=md_index md-type="text")
+										textarea(md-name="desc")
+									.md_block(md-element=md_index md-type="render")
+							- md_index++
+						.ph_desc(style="display:flex;justify-content:space-around")
+							input.btn.btn-primary#update_desc(type="button" value="Update")
+					else
+						.ph_desc
+							h2 Description
+							#ticket_desc.ph_desc_container
+								include md.html
+					
+					
 					.ph_desc
 						h2 Documentation
-						.md_render_container
-							.md_render_control
-								a#md_text.md_event Text
-								a#md_render.md_event Rendered
-							.md_render_box
-								#md_text_box
-									textarea
-								#md_render_box
-									h3 Rendered
-					.ph_desc(style="display:flex;justify-content:space-around")
-						input.btn.btn-primary(type="submit" value="Update")
-						input.btn.btn-primary(type="button" value="Complete")
-						//.ph_desc_container
-							include md2.html
+						#complex_container
+							.md_render_container
+								.md_render_control
+									a.md_event(md-element=md_index md-type="text" href="#") Text
+									a.md_event(md-element=md_index md-type="render" href="#") Render
+								.md_render_box
+									.md_block(md-element=md_index md-type="text")
+										textarea(md-name="doc")
+									.md_block(md-element=md_index md-type="render")
+							.ph_desc(style="display:flex;justify-content:space-around")
+								input.btn.btn-primary#update_doc(type="submit" value="Update")
+								input.btn.btn-primary#complete(type="button" value="Complete")
+					
+						#simple_container
+							#ticket_doc.ph_desc_container
 		script(src="js/popup.js")
 		script(src="js/markdown.js")
 		script(src="js/views/tickets.js")
