@@ -18,10 +18,6 @@ Array.prototype.forEach.call(document.querySelectorAll('.popup_link'), function 
 	})
 });
 
-xhrRequest(`/ticket/node?id=16`, (res) => {
-	console.log(res)
-})
-
 $forEach('.popup_link', (el) => {
 	el.addEventListener('click', () => {
 		xhrRequest(`/ticket/node?id=${el.getAttribute('ticket_id')}`, (res) => {
@@ -46,6 +42,8 @@ $forEach('.popup_link', (el) => {
 			if($('#update_doc')) {
 				$('#update_doc').setAttribute('ticket_id', ticket.id)
 			}
+
+			console.log('Ticket Owner: ' + ticket.owner)
 
 			if(ticket.owner) {
 				$('#simple_container').style.display = 'none'
@@ -79,16 +77,18 @@ if($('#update_doc')) {
 	$('#update_doc').addEventListener('click', () => {
 		let id = $('#update_doc').getAttribute('ticket_id')
 		let doc = getMarkdownByName('doc')
-		xhrRequest(`/ticket/update?id=${id}&type=documentation&doc=${encodeURIComponent(desc)}`, (res) => {
+		xhrRequest(`/ticket/update?id=${id}&type=documentation&doc=${encodeURIComponent(doc)}`, (res) => {
 			console.log(res)
 		})
 	})
 
 	$('#complete').addEventListener('click', () => {
-		let id = $('#update_doc').getAttribute('ticket_id')
-		xhrRequest(`/ticket/complete?id=${id}`, (res) => {
-			console.log(res)
-		})
+		if(confirm('Has the ticket completed for sure?')) {
+			let id = $('#update_doc').getAttribute('ticket_id')
+			xhrRequest(`/ticket/complete?id=${id}`, (res) => {
+				console.log(res)
+			})
+		}
 	})
 }
 

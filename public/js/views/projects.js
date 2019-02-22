@@ -26,6 +26,7 @@ Array.prototype.forEach.call(document.querySelectorAll('.popup_link'), function 
 $forEach('.popup_link', (el) => {
 	el.addEventListener('click', () => {
 		xhrRequest(`/project/node?id=${el.getAttribute('project_id')}`, (res) => {
+			let id = el.getAttribute('project_id')
 			let project = JSON.parse(res)
 			$('#proj_name').innerHTML = project.name
 			$('#proj_ip').innerHTML = project.ip_addr
@@ -38,6 +39,16 @@ $forEach('.popup_link', (el) => {
 			} else {
 				$('#proj_desc').innerHTML = project.desc_html
 			}
+
+			$('#project_docs').innerHTML = ''
+
+			xhrRequest(`/project/docs?id=${id}`, (res) => {
+				let docs = JSON.parse(res)
+				for(let i = 0; i < docs.length; i++){
+					$('#project_docs').innerHTML += `<h3>${docs[i].name}</h3><br><div class="ph_desc_container">${docs[i].html}</div>`
+				}
+				//$('#project_docs').innerHTML = res
+			})
 			
 			hide_loader()
 		})

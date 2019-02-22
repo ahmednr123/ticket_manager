@@ -60,9 +60,12 @@ router.get('/create', (req, res) => {
 		let project = {}
 		project.name = decodeURIComponent(req.query.name)
 		project.group = req.query.group
-		project.desc = (req.query.desc)?decodeURIComponent(req.query.desc):""
+		project.desc = (req.query.desc)?decodeURIComponent(req.query.desc):" "
 		project.repo_name = req.query.repo_name + '.git'
 		project.repo_type = req.query.repo_type
+
+		if (typeof(project.group) == 'string')
+			project.group = [project.group]
 
 		cards.add('ok', 'Project Created')
 		//cards.add('err', 'Wrong Input!')
@@ -104,6 +107,11 @@ router.get('/update', async (req, res) => {
 
 	cards.add('ok', 'Ticket updated')
 	res.end(JSON.stringify(cards.render()))
+})
+
+router.get('/docs', async (req, res) => {
+	let docs = await db.getProjectDocs(req.query.id)
+	res.end(JSON.stringify(docs))
 })
 
 module.exports = router

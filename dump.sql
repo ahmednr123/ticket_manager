@@ -38,7 +38,6 @@ CREATE TABLE `project_config` (
 
 LOCK TABLES `project_config` WRITE;
 /*!40000 ALTER TABLE `project_config` DISABLE KEYS */;
-INSERT INTO `project_config` VALUES (6,'192.168.0.107','3006',NULL),(7,'192.168.0.107','3007',NULL),(16,'192.168.0.107','3016',NULL);
 /*!40000 ALTER TABLE `project_config` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -65,7 +64,6 @@ CREATE TABLE `project_handlers` (
 
 LOCK TABLES `project_handlers` WRITE;
 /*!40000 ALTER TABLE `project_handlers` DISABLE KEYS */;
-INSERT INTO `project_handlers` VALUES (6,'abinp'),(6,'ahmednr123'),(7,'abinp'),(7,'ahmednr123'),(16,'abinp'),(16,'ahmednr123');
 /*!40000 ALTER TABLE `project_handlers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -94,7 +92,6 @@ CREATE TABLE `projects` (
 
 LOCK TABLES `projects` WRITE;
 /*!40000 ALTER TABLE `projects` DISABLE KEYS */;
-INSERT INTO `projects` VALUES (6,'Chillar App [Consumer]','0','2019-02-05 12:08:38','chlr_consumer_app.git','empty'),(7,'Chillar App [Merchant]','0','2019-02-05 12:10:47','chlr_merchant_app.git','empty'),(16,'Chillar App [Consumer Backend]','<h2>Cosumer Backend - Chillar App</h2>\n<h3>Basic Atuhentication</h3>\n<p>At the beginning stage of the development a basic authentication must be provided to the application by the backend. Later on SSL can be added few weeks before going to production. Other than authentication the application must be fully functional.</p>\n<h3>Procedure of authentication</h3>\n<p>As mentioned in the UI design ticket, the consumer application checks if the user is registered, if it is, then the application must send the password to the server to verify. The server then creates a token session and sends it back to the user.</p>\n<p>If the user is not registered then the user must be verified using an OTP. Once the user is verified the application has to setup a local passkey that the user can use to authenticate he token.</p>\n<p>Following are the steps:</p>\n<ul>\n<li>User enters its mobile number.</li>\n<li>Server checks if the user is present in the database and sends back the response</li>\n<li>If the response is TRUE (User found in DB),\n<ul>\n<li>The application must send a password to authenticate the user</li>\n</ul>\n</li>\n<li>If the response is FALSE (User not found),\n<ul>\n<li>The server sends an OTP to the user</li>\n<li>User is verified</li>\n<li>User enters a new password</li>\n<li>Server stores the password and sends a token back to the application</li>\n<li>Application is responsible to prompt a passkey which is to be stored locally</li>\n<li>This passkey encrypts the token</li>\n<li>The encrypted token is then saved locally</li>\n</ul>\n</li>\n</ul>\n<p>If the token is present locally the user is prompted to enter the passkey on opening the application. The passkey is then used to decrypt the token and save it temporarily in RAM during the user session. User can also use fingerprint, this functionality can be added later on.</p>\n','2019-02-08 17:13:47','chlr_consumer_backend.git','empty');
 /*!40000 ALTER TABLE `projects` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -121,7 +118,6 @@ CREATE TABLE `ticket_handlers` (
 
 LOCK TABLES `ticket_handlers` WRITE;
 /*!40000 ALTER TABLE `ticket_handlers` DISABLE KEYS */;
-INSERT INTO `ticket_handlers` VALUES (17,'abinp');
 /*!40000 ALTER TABLE `ticket_handlers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -148,7 +144,6 @@ CREATE TABLE `ticket_hierarchy` (
 
 LOCK TABLES `ticket_hierarchy` WRITE;
 /*!40000 ALTER TABLE `ticket_hierarchy` DISABLE KEYS */;
-INSERT INTO `ticket_hierarchy` VALUES (16,17);
 /*!40000 ALTER TABLE `ticket_hierarchy` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -176,7 +171,7 @@ CREATE TABLE `tickets` (
   UNIQUE KEY `ticket_id_2` (`ticket_id`),
   KEY `project` (`project`),
   CONSTRAINT `tickets_ibfk_1` FOREIGN KEY (`project`) REFERENCES `projects` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -185,7 +180,6 @@ CREATE TABLE `tickets` (
 
 LOCK TABLES `tickets` WRITE;
 /*!40000 ALTER TABLE `tickets` DISABLE KEYS */;
-INSERT INTO `tickets` VALUES (16,'UI design','<h2>UI design</h2>\n',NULL,0,'2019-02-09 09:56:13',NULL,1,0,NULL,6),(17,'Authentication Screens','<h2>Authentication Screens</h2>\n<h3>Verifying User</h3>\n<p>We get the account id from the user and confirm with the server</p>\n<h3>Authentication</h3>\n<p>If the account id is already present in the server. We ask the user for the password to authenticate the user.</p>\n<h3>Registration</h3>\n<p>If the account id is not present in the server we have to register the user.</p>\n<ul>\n<li>We confirm the user using an OTP</li>\n<li>Let the user set a password</li>\n<li>Also let user set a pass-key to make it easier to login later</li>\n</ul>\n',NULL,1,'2019-02-09 09:57:50',NULL,0,0,'auth_screens',6);
 /*!40000 ALTER TABLE `tickets` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -282,4 +276,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-02-09 16:41:50
+-- Dump completed on 2019-02-20 16:02:37

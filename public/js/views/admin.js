@@ -6,7 +6,7 @@ function loadData () {
 		put_users (_global.users)
 	})
 
-	xhrRequest('/ticket/all', (res) => {
+	xhrRequest('/ticket/all?isParent=true', (res) => {
 		_global.parent_tickets = JSON.parse(res)
 		put_parent_tickets (_global.parent_tickets)
 	})

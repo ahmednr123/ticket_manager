@@ -75,6 +75,11 @@ module.exports = {
 		return projects
 	},
 
+	getProjectDocs: async (id) => {
+		let docs = await query(`select name, documentation as html from tickets where project=${mysql.escape(id)} AND parent=0`) //AND completed=1`)
+		return docs
+	},
+
 	getTicket: async (id) => {
 		let ticket = await query(`SELECT tickets.id, tickets.ticket_id, tickets.name, priority, projects.name as project_name, tickets.birthday from tickets inner join projects on projects.id=tickets.project AND tickets.id=${id}`)
 		ticket = ticket[0]
@@ -88,7 +93,7 @@ module.exports = {
 		if(isParent)
 			return await query(`SELECT id,name FROM tickets WHERE parent=TRUE`)
 		else
-			return await query(`SELECT tickets.id, tickets.ticket_id, tickets.name, priority, projects.name as project_name, tickets.birthday from tickets inner join projects on projects.id=tickets.project`)
+			return await query(`SELECT tickets.id, tickets.completed, tickets.ticket_id, tickets.name, priority, projects.name as project_name, tickets.birthday from tickets inner join projects on projects.id=tickets.project`)
 	},
 
 	getTicketHandlers: async (id) => {
@@ -115,7 +120,7 @@ module.exports = {
 	},
 
 	checkHandler: async (ticket_id, username) => {
-		let records = query(`select * from ticket_handlers WHERE id=${mysql.escape(ticket_id)} AND username="${mysql.escape(username)}"`)
+		let records = await query(`select * from ticket_handlers WHERE id=${mysql.escape(ticket_id)} AND username=${mysql.escape(username)}`)
 		return (records.length > 0)?true:false
 	},
 

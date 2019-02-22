@@ -18,6 +18,8 @@ const system = {
 		else
 			throw new Error()
 		
+		console.log('Content to MD: ' + markdown)
+
 		fs.writeFile(md_url, markdown, (err) => {
 			if(err) throw err
 		})

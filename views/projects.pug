@@ -74,7 +74,7 @@ html
 								.md_render_box
 									.md_block(md-element="1" md-type="text")
 										textarea(name="desc")
-									.md_block(md-element="1" md-type="render")
+									.md_block.ph_desc_container(md-element="1" md-type="render")
 									//#md_text_box
 										textarea
 									//#md_render_box
@@ -87,9 +87,10 @@ html
 								include md.html
 					.ph_desc
 						h2 Documentation
-						h3 Navigation Bar
-						.ph_desc_container
-							include md2.html
+						#project_docs
+						//h3 Navigation Bar
+						//.ph_desc_container
+							//include md2.html
 		script(src="js/popup.js")
 		script(src="js/markdown.js")
 		script(src="js/views/projects.js")

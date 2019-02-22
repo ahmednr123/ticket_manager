@@ -20,8 +20,8 @@ html
 				th Priority
 				th Created On
 			each ticket in tickets
-				tr.popup_link(ticket_id=ticket.id)
-					if ticket
+				if ticket
+					tr.popup_link(ticket_id=ticket.id)
 						td #{ticket.name}
 						td #{(ticket.ticket_id)?ticket.ticket_id:'-'}
 						td #{ticket.project_name}
@@ -54,7 +54,7 @@ html
 								.md_render_box
 									.md_block(md-element=md_index md-type="text")
 										textarea(md-name="desc")
-									.md_block(md-element=md_index md-type="render")
+									.md_block.ph_desc_container(md-element=md_index md-type="render")
 							- md_index++
 						.ph_desc(style="display:flex;justify-content:space-around")
 							input.btn.btn-primary#update_desc(type="button" value="Update")
@@ -75,7 +75,7 @@ html
 								.md_render_box
 									.md_block(md-element=md_index md-type="text")
 										textarea(md-name="doc")
-									.md_block(md-element=md_index md-type="render")
+									.md_block.ph_desc_container(md-element=md_index md-type="render")
 							.ph_desc(style="display:flex;justify-content:space-around")
 								input.btn.btn-primary#update_doc(type="submit" value="Update")
 								input.btn.btn-primary#complete(type="button" value="Complete")

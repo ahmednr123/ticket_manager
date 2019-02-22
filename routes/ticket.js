@@ -89,8 +89,8 @@ router.get('/create', async (req, res) => {
 				return
 			}
 			
-			if (ticket.desc.length < 100) {
-				cards.add('err', 'Description must be more than <b>100 letters!</b>')
+			if (ticket.desc.length < 10) {
+				cards.add('err', 'Description must be more than <b>10 letters!</b>')
 				res.end(JSON.stringify(cards.render()))
 				return
 			}
@@ -99,6 +99,7 @@ router.get('/create', async (req, res) => {
 		db.createTicket(ticket, async (err, id) => {
 
 			await fs_system.saveMarkdown('ticket', id, type, ticket.desc)
+			await fs_system.saveMarkdown('ticket', id, constants.MD_DOC, '')
 
 			if(err)
 				cards.add('err', 'Server Error')
@@ -137,7 +138,7 @@ router.get('/update', async (req, res) => {
 	let id = req.query.id
 	let type = req.query.type
 	let desc = (req.query.desc)?decodeURIComponent(req.query.desc):""
-	let doc = (req.query.desc)?decodeURIComponent(req.query.desc):""
+	let doc = (req.query.doc)?decodeURIComponent(req.query.doc):""
 
 	if(type !== constants.MD_DESC && type !== constants.MD_DOC){
 		cards.add('err', '"Type" error')
@@ -158,7 +159,7 @@ router.get('/update', async (req, res) => {
 		return
 	}
 
-	if(req.session.username && type === constants.MD_DESC) {
+	if(req.session.username && type === constants.MD_DOC) {
 		let handler = await db.checkHandler(id, req.session.username)
 		if(!handler){
 			cards.add('err', 'Error')
